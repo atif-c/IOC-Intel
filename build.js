@@ -13,7 +13,15 @@ function mergeManifest(target) {
     const override = JSON.parse(
         fs.readFileSync(path.join(srcDir, `manifest.${target}.json`), 'utf8')
     );
-    return { ...base, ...override };
+    const packageJson = JSON.parse(
+        fs.readFileSync(path.join('./package.json'), 'utf8')
+    );
+
+    return {
+        ...base,
+        ...override,
+        version: packageJson.version, // Inject version from package.json
+    };
 }
 
 function copyFiles(src, dest, skipManifest = true) {
