@@ -1,0 +1,11 @@
+{
+    "background": {
+        "scripts": ["lib/background.js"],
+        "type": "module"
+    },
+    "browser_specific_settings": {
+        "gecko": {
+            "id": "ioc-intel@atif-c.github"
+        }
+    }
+}

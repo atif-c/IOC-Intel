@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>IOC Intel Settings</title>
+    <link rel="stylesheet" href="popup.css" />
+    <script type="module" src="popup.js" defer></script>
+    <script src="./lib/tabs.js" defer></script>
+    <script src="./lib/checkboxes.js" defer></script>
+</head>
+
+
+
+<body>
+
+
+    <header class="pb-2rem bottom-border">
+        <div id="title-bar">
+
+            <h1><img id="icon" src="/assets/logo/logo.svg"> IOC Intel</h1>
+
+        </div>
+
+        <div id="tab-selector">
+            <button data-tab="ip-settings">IP</button>
+            <button data-tab="hash-settings">Hash</button>
+            <button data-tab="url-settings">URL</button>
+        </div>
+    </header>
+
+    <div id="tab-panels">
+        <div data-tab="ip-settings" class="tab-panel">
+
+            <div class="active-switch mt-1rem pb-1rem bottom-border">
+                <label class="switch">
+                    <input id="ip-settings-active-checkbox" class="checkbox" type="checkbox" checked />
+                    <span class="slider"></span>
+                </label>
+            </div>
+
+            <div id="ip-settings-content" class="tab-content disabled">
+
+                <div id="ip-general-settings" class="bottom-border mt-2rem pb-2rem">
+                    <h2>General</h2>
+
+                    <label for="ip-settings-copy-ioc" class="checkbox-text mt-1rem" data-level="1">
+                        <input type="checkbox" id="ip-settings-copy-ioc" />
+                        <span class="box"></span>
+                        <span>Copy IP</span>
+                    </label>
+
+                    <label for="ip-settings-sanitise-ioc" class="checkbox-text" data-level="2">
+                        <input type="checkbox" id="ip-settings-sanitise-ioc" />
+                        <span class="box"></span>
+                        <span>Sanitise IP</span>
+                    </label>
+                </div>
+
+                <div id="ip-settings-url" class="mt-2rem">
+                    <h2>URLs</h2>
+                    <div id="ip-settings-url-list" class="mt-1rem">
+                    </div>
+
+                    <button type="button" id="ip-settings-url-add" class="add-link-button mt-1rem">
+                        <img src="assets/add-link-icon.svg" class="add-link-icon" />
+                    </button>
+                </div>
+
+            </div>
+        </div>
+
+        <div data-tab="url-settings" class="tab-panel">
+
+            <div class="active-switch mt-1rem pb-1rem bottom-border">
+                <label class="switch">
+                    <input id="url-settings-active-checkbox" class="checkbox" type="checkbox" checked />
+                    <span class="slider"></span>
+                </label>
+            </div>
+
+            <div id="url-settings-content" class="tab-content disabled">
+
+                <div id="url-general-settings" class="bottom-border mt-2rem pb-2rem">
+                    <h2>General</h2>
+
+                    <label for="url-settings-copy-ioc" class="checkbox-text mt-1rem" data-level="1">
+                        <input type="checkbox" id="url-settings-copy-ioc" />
+                        <span class="box"></span>
+                        <span>Copy URL</span>
+                    </label>
+
+                    <label for="url-settings-sanitise-ioc" class="checkbox-text" data-level="2">
+                        <input type="checkbox" id="url-settings-sanitise-ioc" />
+                        <span class="box"></span>
+                        <span>Sanitise URL</span>
+                    </label>
+                </div>
+
+                <div id="url-settings-url" class="mt-2rem">
+                    <h2>URLs</h2>
+                    <div id="url-settings-url-list" class="mt-1rem">
+                    </div>
+
+                    <button type="button" id="url-settings-url-add" class="add-link-button mt-1rem">
+                        <img src="assets/add-link-icon.svg" class="add-link-icon" />
+                    </button>
+                </div>
+
+            </div>
+
+        </div>
+
+        <div data-tab="hash-settings" class="tab-panel">
+
+            <div class="active-switch mt-1rem pb-1rem bottom-border">
+                <label class="switch">
+                    <input id="hash-settings-active-checkbox" class="checkbox" type="checkbox" checked />
+                    <span class="slider"></span>
+                </label>
+            </div>
+
+            <div id="hash-settings-content" class="tab-content disabled">
+
+                <div id="hash-general-settings" class="bottom-border mt-2rem pb-2rem">
+                    <h2>General</h2>
+
+                    <label for="hash-settings-copy-ioc" class="checkbox-text mt-1rem" data-level="1">
+                        <input type="checkbox" id="hash-settings-copy-ioc" />
+                        <span class="box"></span>
+                        <span>Copy Hash</span>
+                    </label>
+
+                </div>
+
+                <div id="hash-settings-url" class="mt-2rem">
+                    <h2>URLs</h2>
+                    <div id="hash-settings-url-list" class="mt-1rem">
+                    </div>
+
+                    <button type="button" id="hash-settings-url-add" class="add-link-button mt-1rem">
+                        <img src="assets/add-link-icon.svg" class="add-link-icon" />
+                    </button>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>

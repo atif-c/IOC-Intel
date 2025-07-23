@@ -1,0 +1,24 @@
+{
+    "name": "ioc-intel",
+    "version": "1.0.0",
+    "type": "module",
+    "scripts": {
+        "build:chromium": "node build.js chromium",
+        "build:firefox": "node build.js firefox",
+        "build": "concurrently \"npm:build:chromium\" \"npm:build:firefox\"",
+        "watch:chromium": "chokidar \"src/**/*\" -c \"npm run build:chromium\" --initial",
+        "watch:firefox": "chokidar \"src/**/*\" -c \"npm run build:firefox\" --initial",
+        "start:firefox": "web-ext run --source-dir=dist/firefox",
+        "dev": "concurrently \"npm run watch:firefox\" \"npm run start:firefox\""
+    },
+    "author": "atif-c",
+    "license": "Apache-2.0",
+    "devDependencies": {
+        "chokidar-cli": "^3.0.0",
+        "concurrently": "^9.2.0"
+    },
+    "dependencies": {
+        "web-ext": "^8.8.0",
+        "webextension-polyfill": "^0.12.0"
+    }
+}
