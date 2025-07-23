@@ -1,9 +1,9 @@
 import fs from 'fs';
 import path from 'path';
+import archiver from 'archiver';
 
 const srcDir = './src';
 const distRoot = './dist';
-
 const targets = ['chromium', 'firefox'];
 
 function mergeManifest(target) {
@@ -20,7 +20,7 @@ function mergeManifest(target) {
     return {
         ...base,
         ...override,
-        version: packageJson.version, // Inject version from package.json
+        version: packageJson.version,
     };
 }
 
@@ -40,33 +40,57 @@ function copyFiles(src, dest, skipManifest = true) {
     }
 }
 
-function buildTarget(target) {
+function zipDirectory(sourceDir, outPath) {
+    const output = fs.createWriteStream(outPath);
+    const archive = archiver('zip', { zlib: { level: 9 } });
+
+    return new Promise((resolve, reject) => {
+        output.on('close', resolve);
+        archive.on('error', reject);
+        archive.pipe(output);
+        archive.directory(sourceDir, false);
+        archive.finalize();
+    });
+}
+
+async function buildTarget(target) {
     const distDir = path.join(distRoot, target);
 
+    // Clean and prepare output directory
     fs.rmSync(distDir, { recursive: true, force: true });
     fs.mkdirSync(distDir, { recursive: true });
 
+    // Merge manifest and copy files
     const manifest = mergeManifest(target);
     fs.writeFileSync(
         path.join(distDir, 'manifest.json'),
         JSON.stringify(manifest, null, 2)
     );
     copyFiles(srcDir, distDir);
+
     console.log(`Built ${target} to ${distDir}`);
+
+    // Always zip the directory
+    const zipPath = path.join(distRoot, `${target}.zip`);
+    await zipDirectory(distDir, zipPath);
+    console.log(`Zipped ${target} to ${zipPath}`);
 }
 
-function buildAll() {
+async function buildAll() {
     for (const target of targets) {
-        buildTarget(target);
+        await buildTarget(target);
     }
 }
 
 const target = process.argv[2];
-if (!target || target === 'all') {
-    buildAll();
-} else if (targets.includes(target)) {
-    buildTarget(target);
-} else {
-    console.error(`Unknown target: ${target}`);
-    process.exit(1);
-}
+
+(async () => {
+    if (!target || target === 'all') {
+        await buildAll();
+    } else if (targets.includes(target)) {
+        await buildTarget(target);
+    } else {
+        console.error(`Unknown target: ${target}`);
+        process.exit(1);
+    }
+})();

@@ -14,6 +14,7 @@
     "author": "atif-c",
     "license": "Apache-2.0",
     "devDependencies": {
+        "archiver": "^7.0.1",
         "chokidar-cli": "^3.0.0",
         "concurrently": "^9.2.0",
         "web-ext": "^8.8.0",
