@@ -1,7 +1,6 @@
 {
     "manifest_version": 3,
     "name": "IOC Intel",
-    "version": "1.0",
     "description": "A powerful browser extension for IOC investigation. Use a configurable right-click menu to open threat intel links for fast analysis",
     "icons": {
         "16": "assets/logo/logo-16.png",
