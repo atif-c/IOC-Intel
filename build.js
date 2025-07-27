@@ -24,6 +24,26 @@ function mergeManifest(target) {
     };
 }
 
+function copyPolyfill() {
+    const srcPolyfillPath = path.join(
+        'node_modules',
+        'webextension-polyfill',
+        'dist',
+        'browser-polyfill.min.js'
+    );
+    const destDir = path.join(srcDir, 'lib');
+    const destPolyfillPath = path.join(destDir, 'browser-polyfill.min.js');
+
+    if (!fs.existsSync(srcPolyfillPath)) {
+        console.error(`Polyfill not found at ${srcPolyfillPath}`);
+        process.exit(1);
+    }
+
+    fs.mkdirSync(destDir, { recursive: true });
+    fs.copyFileSync(srcPolyfillPath, destPolyfillPath);
+    console.log(`Copied polyfill to ${destPolyfillPath}`);
+}
+
 function copyFiles(src, dest, skipManifest = true) {
     const entries = fs.readdirSync(src, { withFileTypes: true });
 
@@ -52,8 +72,8 @@ function zipDirectory(sourceDir, outPath) {
         archive.finalize();
     });
 }
-
 async function buildTarget(target) {
+    copyPolyfill(); // ensure polyfill is copied even in single-target builds
     const distDir = path.join(distRoot, target);
 
     // Clean and prepare output directory
@@ -77,6 +97,7 @@ async function buildTarget(target) {
 }
 
 async function buildAll() {
+    copyPolyfill();
     for (const target of targets) {
         await buildTarget(target);
     }
