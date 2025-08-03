@@ -105,7 +105,7 @@ https://urlhaus.abuse.ch/browse.php?search={encodedUrl}
 | `storage`        | Saves user settings and configuration      |
 | `tabs`           | Opens new tabs for threat intel URLs       |
 
-## File Structure
+## Project Structure
 
 ```
 ioc-intel/
