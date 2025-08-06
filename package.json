@@ -6,8 +6,8 @@
         "build:chromium": "node build.js chromium",
         "build:firefox": "node build.js firefox",
         "build": "concurrently \"npm:build:chromium\" \"npm:build:firefox\"",
-        "watch:chromium": "chokidar \"src/**/*\" -c \"npm run build:chromium\" --initial",
-        "watch:firefox": "chokidar \"src/**/*\" -c \"npm run build:firefox\" --initial",
+        "watch:chromium": "chokidar \"src/**/*\" --ignore \"src/lib/browser-polyfill.min.js\" -c \"npm run build:chromium\" --initial",
+        "watch:firefox": "chokidar \"src/**/*\" --ignore \"src/lib/browser-polyfill.min.js\" -c \"npm run build:firefox\" --initial",
         "start:firefox": "web-ext run --source-dir=dist/firefox",
         "dev": "concurrently \"npm run watch:firefox\" \"npm run start:firefox\""
     },
