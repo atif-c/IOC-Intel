@@ -8,7 +8,13 @@
         "48": "assets/logo/logo-48.png",
         "128": "assets/logo/logo-128.png"
     },
-    "permissions": ["clipboardWrite", "contextMenus", "storage"],
+    "permissions": [
+        "activeTab",
+        "clipboardWrite",
+        "contextMenus",
+        "scripting",
+        "storage"
+    ],
     "action": {
         "default_title": "IOC Intel",
         "default_popup": "popup.html"

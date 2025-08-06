@@ -39,6 +39,20 @@ function normaliseUrl(input) {
     return input;
 }
 
+async function copyToClipboard(text) {
+    const [tab] = await browser.tabs.query({
+        active: true,
+        currentWindow: true,
+    });
+    if (!tab?.id) throw new Error('No active tab found');
+
+    await browser.scripting.executeScript({
+        target: { tabId: tab.id },
+        func: (t) => navigator.clipboard.writeText(t),
+        args: [text],
+    });
+}
+
 // Initial setup
 (async () => {
     const storage = getStorage();
@@ -122,7 +136,7 @@ browser.contextMenus.onClicked.addListener(async (info, tab) => {
                     }
 
                     try {
-                        await navigator.clipboard.writeText(toCopy);
+                        await copyToClipboard(toCopy);
                     } catch (err) {
                         console.error('Clipboard write failed:', err);
                     }
@@ -160,7 +174,7 @@ browser.contextMenus.onClicked.addListener(async (info, tab) => {
 
                 if (prefs.hash.copyToClipboard) {
                     try {
-                        await navigator.clipboard.writeText(trimmed);
+                        await copyToClipboard(trimmed);
                     } catch (err) {
                         console.error('Clipboard write failed:', err);
                     }
@@ -201,8 +215,8 @@ browser.contextMenus.onClicked.addListener(async (info, tab) => {
                 for (const url of urls) {
                     const finalUrl = normaliseUrl(
                         url
-                        .replace('{url}', input)
-                        .replace('{encodedUrl}', encodedUrl)
+                            .replace('{url}', input)
+                            .replace('{encodedUrl}', encodedUrl)
                             .replace('{domain}', domain)
                     );
 
@@ -220,7 +234,7 @@ browser.contextMenus.onClicked.addListener(async (info, tab) => {
                         toCopy = toCopy.replace(/\./g, '[.]');
                     }
                     try {
-                        await navigator.clipboard.writeText(toCopy);
+                        await copyToClipboard(toCopy);
                     } catch (err) {
                         console.error('Clipboard write failed:', err);
                     }
