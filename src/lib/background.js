@@ -32,6 +32,13 @@ async function updateContextMenu(id, title, isActive) {
     }
 }
 
+function normaliseUrl(input) {
+    if (!/^https?:\/\//i.test(input)) {
+        return 'https://' + input;
+    }
+    return input;
+}
+
 // Initial setup
 (async () => {
     const storage = getStorage();
@@ -85,7 +92,7 @@ browser.contextMenus.onClicked.addListener(async (info, tab) => {
                 let index = activeTab.index + 1;
 
                 for (const url of urls) {
-                    const finalUrl = url.replace('{ip}', trimmed);
+                    const finalUrl = normaliseUrl(url.replace('{ip}', trimmed));
                     await browser.tabs.create({
                         url: finalUrl,
                         index,
@@ -140,7 +147,9 @@ browser.contextMenus.onClicked.addListener(async (info, tab) => {
                 let index = activeTab.index + 1;
 
                 for (const url of urls) {
-                    const finalUrl = url.replace('{hash}', trimmed);
+                    const finalUrl = normaliseUrl(
+                        url.replace('{hash}', trimmed)
+                    );
                     await browser.tabs.create({
                         url: finalUrl,
                         index,
@@ -190,10 +199,12 @@ browser.contextMenus.onClicked.addListener(async (info, tab) => {
                 } catch (e) {}
 
                 for (const url of urls) {
-                    const finalUrl = url
+                    const finalUrl = normaliseUrl(
+                        url
                         .replace('{url}', input)
                         .replace('{encodedUrl}', encodedUrl)
-                        .replace('{domain}', domain);
+                            .replace('{domain}', domain)
+                    );
 
                     await browser.tabs.create({
                         url: finalUrl,
