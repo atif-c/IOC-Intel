@@ -1,20 +1,30 @@
 # IOC Intel
 
-A powerful and flexible browser extension for investigating Indicators of Compromise (IOCs). It adds a configurable right-click context menu for selected content and opens threat intelligence links in for efficient analysis.
+A powerful and flexible browser extension for investigating Indicators of Compromise (IOCs). Use configurable right-click context menu for selected highlighted IOCs and opens threat intelligence links for efficient analysis.
+
+## Download
+
+Get IOC Intel from your browser's extension store:
+
+-   [Firefox](https://addons.mozilla.org/en-GB/firefox/addon/ioc-intel)
+-   [Chrome](https://chromewebstore.google.com/detail/ioc-intel/nepfimakbjcpoanlcdceklibepapeann)
+-   [Edge](https://microsoftedge.microsoft.com/addons/detail/ioc-intel/iindoakkhkejhloloffajdkbdbeblnpa)
 
 ## Features
 
--   Detects and validates:
+-   Lookup:
+
     -   **IPv4 / IPv6 addresses**
     -   **Hashes**: MD5, SHA-1, SHA-256
     -   **URLs** and **domains**
--   Customizable behavior via settings:
+
+-   Customisable settings:
     -   Enable/disable IOC types: IP, hash, URL
     -   Enable/disable:
         -   Auto-copy to clipboard
         -   Sanitisation (e.g., `192.168.1[.]1`, `example[.]com`)
-    -   Define your own intel URLs with smart placeholders
--   Opens matching threat intelligence URLs in background tabs.
+    -   Define your own intel URLs with dynamic placeholders
+-   Opens intel links in background tabs for fast access
 
 ## Supported Placeholders
 
@@ -28,36 +38,21 @@ You can define custom threat intel URLs with these dynamic values:
 | `{encodedUrl}` | URL-encoded version of `{url}`         |
 | `{domain}`     | Domain extracted from the selected URL |
 
-## Installation Instructions
+## Try Online
 
-### Chrome
-
-1. Open `chrome://extensions/` in your address bar.
-2. Enable **Developer mode** (top-right toggle).
-3. Click **Load unpacked**.
-4. Select the folder containing `manifest.json` and `background.js`.
-
-### Firefox
-
-1. Open `about:debugging#/runtime/this-firefox` in your address bar.
-2. Click **Load Temporary Add-on**.
-3. Select the `manifest.json` file in your extension folder.
-
-### Edge
-
-1. Open `edge://extensions/` in your address bar.
-2. Enable **Developer mode** (bottom-left toggle).
-3. Click **Load unpacked**.
-4. Select the folder containing your extension files.
+Test the extension with this mock webpage: [IOC Intel Demo](https://atif-c.github.io/IOC-Intel/test-iocs)
 
 ## Configuration
 
 After installing, open the extension's **Options** page to:
 
 -   Enable/disable types of IOCs to monitor
+
 -   Toggle:
+
     -   Clipboard copying
     -   IOC sanitisation
+
 -   Set your own threat intel URLs for:
     -   IP addresses
     -   Hashes
@@ -85,10 +80,10 @@ https://urlhaus.abuse.ch/browse.php?search={encodedUrl}
 
 ## Example Usage
 
-1. Highlight any IP address, file hash, or URL on a webpage.
+1. Highlight an IP, hash, or URL
 2. Right-click and choose `IOC Intel`.
-3. Intelligence links will open in background tabs.
-4. If enabled, the IOC will be sanitised and copied to your clipboard.
+3. Intel links open in background tabs
+4. If enabled, the IOC is copied (and sanitised)
 
 ## IOC Types & Validation
 
@@ -100,19 +95,83 @@ https://urlhaus.abuse.ch/browse.php?search={encodedUrl}
 
 | Permission       | Purpose                                    |
 | ---------------- | ------------------------------------------ |
-| `clipboardWrite` | Writes IOCs to clipboard                   |
-| `contextMenus`   | Adds right-click options for selected IOCs |
-| `storage`        | Saves user settings and configuration      |
-| `tabs`           | Opens new tabs for threat intel URLs       |
+| `clipboardWrite` | Copies IOCs to clipboard                   |
+| `contextMenus`   | Adds right-click options                   |
+| `storage`        | Saves user settings                        |
+| `tabs`           | Opens threat intel URLs in background tabs |
 
-## Project Structure
+## Development
+
+### Building from Source
+
+1. **Clone the repository**:
+
+    ```bash
+    git clone https://github.com/your-username/ioc-intel.git
+    cd ioc-intel
+    ```
+
+2. **Install dependencies**:
+
+    ```bash
+    npm install
+    ```
+
+3. **Build the extension**:
+
+    ```bash
+    npm run build
+    ```
+
+    This creates:
+
+-   Unpacked extensions in `dist/chrome/` and `dist/firefox/`
+-   Zipped `.zip` files ready for upload or sideload
+
+### Live Development
+
+For active development with automatic reloading:
+
+```bash
+npm run dev
+```
+
+This uses `web-ext` to:
+
+-   Launch Firefox with the extension loaded
+-   Auto-reload the extension when source files change
+-   Provide live development feedback
+
+### Manual Installation
+
+#### Firefox
+
+1. Open `about:debugging#/runtime/this-firefox` in your address bar.
+2. Click **Load Temporary Add-on**.
+3. Select the `manifest.json` file in the `dist/firefox/` folder.
+
+#### Chrome
+
+1. Open `chrome://extensions/` in your address bar.
+2. Enable **Developer mode** (top-right toggle).
+3. Click **Load unpacked**.
+4. Select the `dist/chromium/` folder.
+
+#### Edge
+
+1. Open `edge://extensions/` in your address bar.
+2. Enable **Developer mode** (bottom-left toggle).
+3. Click **Load unpacked**.
+4. Select the `dist/chromium/` folder (Edge uses Chromium format).
+
+### File Structure
 
 ```
 ioc-intel/
 ├── build.js                  # Build script for Firefox/Chromium
 ├── package.json
 ├── package-lock.json
-├── web-ext-config.mjs        # Firefox extension config
+├── web-ext-config.mjs        # Firefox web-ext- dev config
 ├── src/                      # Source files (editable)
 │   ├── assets/
 │   │   ├── logo/
@@ -135,8 +194,10 @@ ioc-intel/
 │   └── manifest.firefox.json       # Merged with base for Firefox builds
 │
 └── dist/                     # Build output (ignored by Git)
-    ├── chrome/
-    └── firefox/
+    ├── firefox/
+    ├── chromium/
+    ├── firefox.zip
+    └── chromium.zip
 ```
 
 ---
