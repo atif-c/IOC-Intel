@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <title>IOC Test Page</title>
+
+    <style>
+        *,
+        *::before,
+        *::after {
+            box-sizing: border-box;
+        }
+
+        :root {
+            --clr-light: rgb(255, 255, 255);
+            --clr-dark-surface: rgb(35, 35, 35);
+            --clr-dark-alt-surface: rgb(45, 45, 45);
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            color: var(--clr-light);
+            background-color: var(--clr-dark-surface);
+            padding: 1rem;
+            margin: 0;
+        }
+
+        a {
+            color: #66b0ff;
+            text-decoration: none;
+        }
+
+        a:hover {
+            text-decoration: underline;
+        }
+
+        .container {
+            max-width: 800px;
+            width: 100%;
+            margin: 0 auto;
+            padding: 0 1rem;
+        }
+
+        h1 {
+            margin: 0;
+        }
+
+        h2 {
+            margin: 1rem 0;
+        }
+
+        .ioc {
+            display: flex;
+            align-items: center;
+            font-family: monospace;
+            background-color: var(--clr-dark-alt-surface);
+            padding: 0.5rem 1rem;
+            border-left: 4px solid #e53935;
+            border-radius: 4px;
+            margin: 0.5rem 0;
+            white-space: pre-wrap;
+            word-break: break-word;
+            flex-wrap: wrap;
+
+            code {
+                flex-grow: 1;
+                font-size: 1rem;
+                color: var(--clr-light);
+            }
+
+            .hint {
+                font-size: 0.85rem;
+                background-color: #444;
+                padding: 0.2rem 0.5rem;
+                border-radius: 4px;
+                /* margin-left: 1rem; */
+                color: #bbb;
+                white-space: nowrap;
+            }
+
+            &:hover {
+                background-color: #333;
+                cursor: pointer;
+            }
+
+
+        }
+
+        textarea {
+            width: 100%;
+            resize: none;
+            font-size: 1rem;
+            color: var(--clr-light);
+            background-color: var(--clr-dark-alt-surface);
+            padding: 0.5rem;
+            border: 1px solid #555;
+            border-radius: 4px;
+            margin-top: 1rem;
+        }
+
+        @media (max-width: 600px) {
+            .ioc {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 0.3rem;
+            }
+
+            .hint {
+                margin-left: 0;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <h1>IOC Test Page</h1>
+        <p>Below are various IOCs for testing with <a href="https://github.com/atif-c/IOC-Intel" target="_blank">IOC
+                Intel</a></p>
+
+        <h2>IPv4</h2>
+        <div class="ioc"><code>91.218.66.85</code><span class="hint">IPv4 address</span></div>
+
+        <h2>IPv6</h2>
+        <div class="ioc"><code>2a03:4000:40:2ea:8475:f9ff:fe91:02e0</code><span class="hint">IPv6 (full)</span></div>
+        <div class="ioc"><code>2A03:4000:40:2EA:8475:F9FF:FE91:2E0</code><span class="hint">IPv6 (uppercase)</span>
+        </div>
+        <div class="ioc"><code>2a03:4000:40::2ea</code><span class="hint">IPv6 (compressed)</span></div>
+
+        <h2>Hashes</h2>
+        <div class="ioc"><code>44d88612fea8a8f36de82e1278abb02f</code><span class="hint">MD5</span></div>
+        <div class="ioc"><code>3395856ce81f2b7382dee72602f798b642f14140</code><span class="hint">SHA1</span></div>
+        <div class="ioc"><code>275a021bbfb6489e54d471899f7db9d1663fc695ec2fe2a2c4538aabf651fd0f</code><span
+                class="hint">SHA256</span></div>
+        <div class="ioc"><code>275A021BBFB6489E54D471899F7DB9D1663FC695EC2FE2A2C4538AABF651FD0F</code><span
+                class="hint">SHA256 (uppercase)</span></div>
+
+        <h2>URLs</h2>
+        <div class="ioc"><code>fedor-turin.ru</code><span class="hint">Domain</span></div>
+        <div class="ioc"><code>backup.fedor-turin.ru</code><span class="hint">Subdomain</span></div>
+        <div class="ioc"><code>https://fedor-turin.ru</code><span class="hint">Base URL</span></div>
+        <div class="ioc"><code>https://backup.fedor-turin.ru/login</code><span class="hint">Full URL</span></div>
+
+        <h2>Test Clipboard</h2>
+        <textarea rows="1" placeholder="Test the clipboard here..."></textarea>
+    </div>
+</body>
+
+</html>
