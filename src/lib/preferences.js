@@ -13,9 +13,9 @@ const defaultPreferences = {
         copyToClipboard: true,
         sanitise: true,
         urls: [
-            'https://www.abuseipdb.com/check/{ip}',
-            'https://threatfox.abuse.ch/browse.php?search=ioc%3A{ip}',
-            'https://www.shodan.io/host/{ip}',
+            'abuseipdb.com/check/{ip}',
+            'threatfox.abuse.ch/browse.php?search=ioc%3A{ip}',
+            'shodan.io/host/{ip}',
         ],
     },
 
@@ -23,8 +23,8 @@ const defaultPreferences = {
         active: true,
         copyToClipboard: true,
         urls: [
-            'https://www.virustotal.com/gui/file/{hash}',
-            'https://urlhaus.abuse.ch/browse.php?search={hash}',
+            'virustotal.com/gui/file/{hash}',
+            'urlhaus.abuse.ch/browse.php?search={hash}',
         ],
     },
     url: {
@@ -32,9 +32,9 @@ const defaultPreferences = {
         copyToClipboard: true,
         sanitise: true,
         urls: [
-            'https://urlhaus.abuse.ch/browse.php?search={encodedUrl}',
-            'https://mxtoolbox.com/SuperTool.aspx?action=whois%3a{domain}',
-            'https://www.virustotal.com/gui/domain/{domain}',
+            'urlhaus.abuse.ch/browse.php?search={encodedUrl}',
+            'mxtoolbox.com/SuperTool.aspx?action=whois%3a{domain}',
+            'virustotal.com/gui/domain/{domain}',
         ],
     },
 };
