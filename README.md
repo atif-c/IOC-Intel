@@ -58,7 +58,7 @@ After installing, open the extension's **Options** page to:
     -   Hashes
     -   URLs
 
-You can include multiple URLs per IOC type.
+You can include multiple URLs per IOC type
 
 Example intel URL for IP:
 
@@ -81,7 +81,7 @@ https://urlhaus.abuse.ch/browse.php?search={encodedUrl}
 ## Example Usage
 
 1. Highlight an IP, hash, or URL
-2. Right-click and choose `IOC Intel`.
+2. Right-click and choose `IOC Intel`
 3. Intel links open in background tabs
 4. If enabled, the IOC is copied (and sanitised)
 
@@ -126,7 +126,7 @@ https://urlhaus.abuse.ch/browse.php?search={encodedUrl}
     This creates:
 
 -   Unpacked extensions in `dist/chrome/` and `dist/firefox/`
--   Zipped `.zip` files ready for upload or sideload
+-   Zipped `.zip` files ready for publishing or sideloading
 
 ### Live Development
 
@@ -146,23 +146,23 @@ This uses `web-ext` to:
 
 #### Firefox
 
-1. Open `about:debugging#/runtime/this-firefox` in your address bar.
-2. Click **Load Temporary Add-on**.
-3. Select the `manifest.json` file in the `dist/firefox/` folder.
+1. Open `about:debugging#/runtime/this-firefox` in your address bar
+2. Click **Load Temporary Add-on**
+3. Select the `manifest.json` file in the `dist/firefox/` folder
 
 #### Chrome
 
-1. Open `chrome://extensions/` in your address bar.
-2. Enable **Developer mode** (top-right toggle).
-3. Click **Load unpacked**.
-4. Select the `dist/chromium/` folder.
+1. Open `chrome://extensions/` in your address bar
+2. Enable **Developer mode** (top-right toggle)
+3. Click **Load unpacked**
+4. Select the `dist/chromium/` folder
 
 #### Edge
 
-1. Open `edge://extensions/` in your address bar.
-2. Enable **Developer mode** (bottom-left toggle).
-3. Click **Load unpacked**.
-4. Select the `dist/chromium/` folder (Edge uses Chromium format).
+1. Open `edge://extensions/` in your address bar
+2. Enable **Developer mode** (bottom-left toggle)
+3. Click **Load unpacked**
+4. Select the `dist/chromium/` folder (Edge uses Chromium format)
 
 ### File Structure
 
@@ -204,4 +204,4 @@ ioc-intel/
 
 ### Attribution
 
-Satellite emoji icon by [Twemoji](https://github.com/twitter/twemoji), licensed under [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/).
+Satellite emoji icon by [Twemoji](https://github.com/twitter/twemoji), licensed under [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/)
