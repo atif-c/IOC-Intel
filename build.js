@@ -72,6 +72,7 @@ function zipDirectory(sourceDir, outPath) {
         archive.finalize();
     });
 }
+
 async function buildTarget(target) {
     copyPolyfill(); // ensure polyfill is copied even in single-target builds
     const distDir = path.join(distRoot, target);
