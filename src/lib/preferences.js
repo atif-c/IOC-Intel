@@ -7,7 +7,7 @@ export const useLocalStorage = false;
  * The default structure and values for user preferences.
  * Used as a schema/template to validate and reset malformed or missing values.
  */
-const defaultPreferences = {
+const defaultPreferencesv1 = {
     ip: {
         active: true,
         copyToClipboard: true,
@@ -37,7 +37,10 @@ const defaultPreferences = {
             'virustotal.com/gui/domain/{domain}',
         ],
     },
+    version: 1,
 };
+
+const defaultPreferences = defaultPreferencesv1;
 
 /**
  * Recursively cleans a user preferences object against a template.
