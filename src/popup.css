@@ -95,7 +95,10 @@ header {
             0px 4px 8px var(--clr-shadow-dark),
             4px 4px 8px var(--clr-shadow-dark);
 
-        /* All buttons */
+        display: flex;
+        gap: 0.25rem;
+        padding: 0.25rem;
+
         button {
             font-size: 0.75rem;
             cursor: pointer;
@@ -103,7 +106,6 @@ header {
             padding: 0.25rem 0.75rem;
             border: 0px;
             border-radius: 0.25rem;
-            margin: 0.25rem 0rem;
 
             &.active {
                 box-shadow: inset -2px 0px 4px var(--clr-shadow-light),
@@ -112,21 +114,6 @@ header {
                     inset 2px 0px 4px var(--clr-shadow-dark),
                     inset 0px 2px 4px var(--clr-shadow-dark),
                     inset 2px 2px 4px var(--clr-shadow-dark);
-            }
-
-            /* first button */
-            &:first-of-type {
-                margin-left: 0.25rem;
-            }
-
-            /* any button that follows another */
-            & + button {
-                margin-left: 0.25rem;
-            }
-
-            /* last button */
-            &:last-of-type {
-                margin-right: 0.25rem;
             }
         }
     }
