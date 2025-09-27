@@ -1,0 +1,133 @@
+@font-face {
+    font-family: 'Inter';
+    src: url('@src/assets/fonts/InterVariable.woff2') format('woff2');
+    font-weight: 100 900;
+    font-style: normal;
+    font-display: swap;
+}
+
+:root {
+    --popup-size: 450px;
+
+    --clr-primary: #00bbff;
+
+    /* Light theme */
+    --clr-light: rgb(255, 255, 255);
+    --clr-light-surface: rgb(220, 220, 220);
+    --clr-light-alt-surface: rgb(210, 210, 210);
+
+    /* Dark theme */
+    --clr-dark: rgb(0, 0, 0);
+    --clr-dark-surface: rgb(35, 35, 35);
+    --clr-dark-alt-surface: rgb(45, 45, 45);
+
+    /* Unified neumorphic shadows */
+    --clr-shadow-light: rgba(255, 255, 255, 0.05);
+    --clr-shadow-dark: rgba(0, 0, 0, 0.5); /* .4 */
+
+    /* General UI */
+    --clr-selected: rgb(150, 150, 255);
+    --clr-positive: rgb(150, 255, 150);
+    --clr-negative: rgb(255, 150, 150);
+    --clr-border: rgb(100, 100, 100);
+    --clr-muted: rgb(140, 140, 140);
+
+    /* Shadows */
+    --shadow-sm: -1px 0px 2px var(--clr-shadow-light),
+        0px -1px 2px var(--clr-shadow-light),
+        -1px -1px 2px var(--clr-shadow-light),
+        1px 0px 2px var(--clr-shadow-dark), 0px 1px 2px var(--clr-shadow-dark),
+        1px 1px 2px var(--clr-shadow-dark);
+
+    --shadow-md: -2px 0px 4px var(--clr-shadow-light),
+        0px -2px 4px var(--clr-shadow-light),
+        -2px -2px 4px var(--clr-shadow-light),
+        2px 0px 4px var(--clr-shadow-dark), 0px 2px 4px var(--clr-shadow-dark),
+        2px 2px 4px var(--clr-shadow-dark);
+
+    --shadow-lg: -4px 0px 8px var(--clr-shadow-light),
+        0px -4px 8px var(--clr-shadow-light),
+        -4px -4px 8px var(--clr-shadow-light),
+        4px 0px 8px var(--clr-shadow-dark), 0px 4px 8px var(--clr-shadow-dark),
+        4px 4px 8px var(--clr-shadow-dark);
+
+    --shadow-sm-inset: inset -1px 0px 2px var(--clr-shadow-light),
+        inset 0px -1px 2px var(--clr-shadow-light),
+        inset -1px -1px 2px var(--clr-shadow-light),
+        inset 1px 0px 2px var(--clr-shadow-dark),
+        inset 0px 1px 2px var(--clr-shadow-dark),
+        inset 1px 1px 2px var(--clr-shadow-dark);
+
+    --shadow-md-inset: inset -2px 0px 4px var(--clr-shadow-light),
+        inset 0px -2px 4px var(--clr-shadow-light),
+        inset -2px -2px 4px var(--clr-shadow-light),
+        inset 2px 0px 4px var(--clr-shadow-dark),
+        inset 0px 2px 4px var(--clr-shadow-dark),
+        inset 2px 2px 4px var(--clr-shadow-dark);
+
+    --shadow-lg-inset: inset -4px 0px 8px var(--clr-shadow-light),
+        inset 0px -4px 8px var(--clr-shadow-light),
+        inset -4px -4px 8px var(--clr-shadow-light),
+        inset 4px 0px 8px var(--clr-shadow-dark),
+        inset 0px 4px 8px var(--clr-shadow-dark),
+        inset 4px 4px 8px var(--clr-shadow-dark);
+}
+
+*,
+*::before,
+*::after {
+    color: var(--clr-light);
+    user-select: none;
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+html {
+    padding: 2rem;
+    overflow-y: auto;
+    overflow-x: auto;
+    min-width: var(--popup-size);
+    width: var(--popup-size);
+    max-width: var(--popup-size);
+
+    body {
+        background-color: var(--clr-dark-surface);
+        font-family: Inter, sans-serif;
+    }
+}
+
+h1 {
+    font-size: 1.5rem;
+}
+h2 {
+    font-size: 1.25rem;
+}
+
+.mt-1rem {
+    margin-top: 1rem !important;
+}
+
+.mt-1-5rem {
+    margin-top: 1.5rem !important;
+}
+
+.mt-2rem {
+    margin-top: 2rem !important;
+}
+
+.ml-2-5rem {
+    margin-left: 2.5rem !important;
+}
+
+.pb-1rem {
+    padding-bottom: 1rem !important;
+}
+
+.pb-2rem {
+    padding-bottom: 2rem !important;
+}
+
+.btm-border {
+    border-bottom: 1px solid var(--clr-border) !important;
+}

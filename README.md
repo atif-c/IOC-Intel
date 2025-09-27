@@ -168,32 +168,25 @@ This uses `web-ext` to:
 
 ```
 ioc-intel/
-├── build.js                  # Build script for Firefox/Chromium
-├── package.json
-├── package-lock.json
-├── web-ext-config.mjs        # Firefox web-ext- dev config
-├── src/                      # Source files (editable)
-│   ├── assets/
-│   │   ├── logo/
-│   │   └── fonts/
+├── build.js                            # Build script for Firefox/Chromium extensions
+├── web-ext-config.mjs                  # Firefox web-ext development configuration
+├── src/                                # Source files (editable)
+│   ├── assets/                         # Static assets (icons, fonts, images)
 │   │
-│   ├── popup.css
-│   ├── popup.html
-│   ├── popup.js
+│   ├── lib/                            # Core application libraries
+│   │   ├── IOC/                        # IOC validation and processing logic
+│   │   ├── browser/                    # Browser extension interaction layer
+│   │   ├── components/                 # Reusable Svelte UI components
+│   │   └── storage/                    # Data persistence and state management
 │   │
-│   ├── lib/
-│   │   ├── background.js
-│   │   ├── browser-polyfill.min.js
-│   │   ├── checkboxes.js
-│   │   ├── ioc-validator.js
-│   │   ├── preferences.js
-│   │   └── tabs.js
+│   ├── manifests/                      # Extension manifest definitions
+│   │   ├── manifest.base.json
+│   │   ├── manifest.chromium.json      # Merged with base for Chromium builds
+│   │   └── manifest.firefox.json       # Merged with base for Firefox builds
 │   │
-│   ├── manifest.base.json
-│   ├── manifest.chromium.json      # Merged with base for Chromium builds
-│   └── manifest.firefox.json       # Merged with base for Firefox builds
+│   └── popup/                          # Extension popup window implementation
 │
-└── dist/                     # Build output (ignored by Git)
+└── dist/                               # Build output (ignored by Git)
     ├── firefox/
     ├── chromium/
     ├── firefox.zip

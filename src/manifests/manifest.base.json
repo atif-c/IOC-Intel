@@ -17,6 +17,6 @@
     ],
     "action": {
         "default_title": "IOC Intel",
-        "default_popup": "popup.html"
+        "default_popup": "src/popup/popup.html"
     }
 }
