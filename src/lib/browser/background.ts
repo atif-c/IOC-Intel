@@ -8,11 +8,19 @@ const preferences = PreferencesState.getInstance();
 async function init() {
     // Keep preferences updated when storage changes
     Browser.storage.onChanged.addListener(() => {
-        // preferences.stateManager.load();
+        preferences.stateManager.load();
     });
 
     // Handle context menu clicks
     Browser.contextMenus.onClicked.addListener(async info => {
+        if (!preferences.state || Object.keys(preferences.state).length === 0) {
+            await preferences.stateManager.load();
+        }
+
+        if (!preferences.state || !(info.menuItemId in preferences.state)) {
+            return;
+        }
+
         if (!(info.menuItemId in preferences.state)) return;
 
         const normalisedUserSelection = normaliseString(info.selectionText!);
