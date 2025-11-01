@@ -28,5 +28,9 @@
         &.invalid {
             border: 0.1rem solid var(--clr-negative);
         }
+
+        &:focus-visible {
+            outline: 0.1rem solid var(--clr-selected);
+        }
     }
 </style>

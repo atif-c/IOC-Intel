@@ -34,6 +34,10 @@
                     opacity: 0.75;
                 }
             }
+
+            &:focus-visible + .box {
+                outline: 0.1rem solid var(--clr-selected);
+            }
         }
 
         .box {

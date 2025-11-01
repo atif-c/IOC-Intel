@@ -29,6 +29,10 @@
         border-radius: 0.35rem;
 
         box-shadow: var(--shadow-lg);
+
+        &:focus-visible {
+            outline: 0.1rem solid var(--clr-selected);
+        }
     }
 
     .add-link-icon {

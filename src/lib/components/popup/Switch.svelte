@@ -63,6 +63,10 @@
                 transform: translateX(var(--slider-translate-x));
                 background-color: var(--clr-positive);
             }
+
+            &:focus-visible + .slider {
+                outline: 0.1rem solid var(--clr-selected);
+            }
         }
 
         .slider {

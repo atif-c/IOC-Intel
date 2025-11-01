@@ -24,5 +24,9 @@
         &.selected {
             box-shadow: var(--shadow-md-inset);
         }
+
+        &:focus-visible {
+            outline: 0.1rem solid var(--clr-selected);
+        }
     }
 </style>
