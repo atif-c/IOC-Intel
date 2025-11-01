@@ -56,9 +56,15 @@
         align-items: center;
     }
 
-    .ioc-panel.disabled {
-        pointer-events: none;
-        opacity: 0.5;
-        filter: blur(0.1rem);
+    .ioc-panel {
+        transition:
+            filter 0.1s ease,
+            opacity 0.1s ease;
+
+        &.disabled {
+            pointer-events: none;
+            opacity: 0.5;
+            filter: blur(0.1rem);
+        }
     }
 </style>

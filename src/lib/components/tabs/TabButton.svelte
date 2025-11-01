@@ -20,6 +20,7 @@
         padding: 0.25rem 0.75rem;
         border: 0px;
         border-radius: 0.25rem;
+        transition: box-shadow 0.1s;
 
         &.selected {
             box-shadow: var(--shadow-md-inset);
