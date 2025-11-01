@@ -20,7 +20,7 @@
     <FlagList bind:flags={selectedTabIOCState!.flags} />
 </div>
 
-<div class="url-list mt-2rem pb-2rem">
+<div class="url-list mt-2rem">
     <h2>URLs</h2>
     {#each selectedTabIOCState!.urls as _url, index}
         <Url bind:url={selectedTabIOCState!.urls[index]} />

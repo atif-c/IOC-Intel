@@ -39,7 +39,7 @@
     </div>
 
     <div
-        class="ioc-panel mt-2rem pb-2rem"
+        class="ioc-panel mt-2rem"
         class:disabled={!selectedTabState.active}
     >
         <SelectedIOCPanel
