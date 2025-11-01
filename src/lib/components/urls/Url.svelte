@@ -1,12 +1,38 @@
 <script lang="ts">
-    import { isValidUrl } from '@src/lib/IOC/ioc-utils';
+    import { isValidUrl, normaliseUrl } from '@src/lib/IOC/ioc-utils';
 
     let { url = $bindable() }: { url: string } = $props();
+    let focused = $state(false);
+
+    const shortUrl = (URLString: string) => {
+        try {
+            const URlObject = new URL(normaliseUrl(URLString));
+            return URlObject.hostname;
+        } catch (e) {
+            return URLString;
+        }
+    };
+
+    const oninput = (event: Event) => {
+        const target = event.currentTarget as HTMLInputElement;
+        url = target.value;
+    };
+    const onfocus = (event: FocusEvent) => {
+        focused = true;
+        const target = event.target as HTMLInputElement;
+        const length = target.value.length;
+        target.setSelectionRange(length, length);
+    };
+
+    const onblur = () => (focused = false);
 </script>
 
 <input
     type="text"
-    bind:value={url}
+    value={focused ? url : shortUrl(url)}
+    {oninput}
+    {onfocus}
+    {onblur}
     placeholder={url.length === 0 ? 'Enter a URL' : undefined}
     class:invalid={!isValidUrl(url) && url.length > 0}
 />
