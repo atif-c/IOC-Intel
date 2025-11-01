@@ -11,12 +11,12 @@
 
     preferences.initialiseAutoSave();
 
-    const tabConfigs = $derived(
-        Object.entries(defaultPreferences).map(([key, value], index) => ({
+    const tabConfigs = Object.entries(defaultPreferences).map(
+        ([key, value], index) => ({
             id: key,
             displayName: value.name,
             isSelected: index === 0,
-        }))
+        })
     );
     const tabState = new TabState(tabConfigs);
 
