@@ -18,7 +18,7 @@
         font-size: 0.75rem;
         background-color: transparent;
         padding: 0.25rem 0.75rem;
-        border: 0px;
+        border: none;
         border-radius: 0.25rem;
         transition: box-shadow 0.1s;
 

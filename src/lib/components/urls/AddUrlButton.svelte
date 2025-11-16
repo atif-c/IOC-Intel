@@ -21,8 +21,8 @@
 <style>
     .add-url-button {
         cursor: pointer;
-        height: 2rem;
         width: 2.5rem;
+        height: 2rem;
         background-color: transparent;
         padding: 0.5rem 0rem;
         border: none;
