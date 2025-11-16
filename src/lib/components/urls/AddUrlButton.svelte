@@ -26,7 +26,7 @@
         background-color: transparent;
         padding: 0.5rem 0rem;
         border: none;
-        border-radius: 0.35rem;
+        border-radius: 0.25rem;
 
         box-shadow: var(--shadow-lg);
 
