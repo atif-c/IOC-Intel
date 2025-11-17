@@ -23,6 +23,8 @@
     let selectedTabState = $derived(
         preferences.getSelectedTabsIOCState(tabState)
     );
+
+    let isChromium = /Chrom/.test(navigator.userAgent);
 </script>
 
 <div class="header pb-2rem btm-border">
@@ -40,6 +42,7 @@
 
     <div
         class="ioc-panel mt-2rem"
+        class:pb-chromium={isChromium}
         class:disabled={!selectedTabState.active}
     >
         <SelectedIOCPanel
