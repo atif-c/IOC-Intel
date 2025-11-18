@@ -44,7 +44,7 @@
         width: 100%;
         background-color: transparent;
         padding: 0.5rem 1rem;
-        border: 1px solid transparent;
+        border: transparent;
         border-radius: 0.25rem;
 
         box-shadow: var(--shadow-lg), var(--shadow-lg-inset);
