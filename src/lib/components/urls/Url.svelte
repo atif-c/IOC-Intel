@@ -41,6 +41,7 @@
     input[type='text'] {
         outline: none;
 
+        color: var(--clr-muted);
         width: 100%;
         background-color: transparent;
         padding: 0.5rem 1rem;
@@ -50,6 +51,10 @@
         box-shadow: var(--shadow-lg), var(--shadow-lg-inset);
 
         margin-top: 1rem;
+
+        &:focus {
+            color: var(--clr-light);
+        }
 
         &.invalid {
             border: 0.1rem solid var(--clr-negative);
