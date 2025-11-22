@@ -23,10 +23,14 @@
 <div class="url-list mt-2rem">
     <h2>URLs</h2>
     {#each selectedTabIOCState!.urls as _url, index}
-        <Url bind:url={selectedTabIOCState!.urls[index]} />
+        <Url
+            class="mt-1rem"
+            bind:url={selectedTabIOCState!.urls[index]}
+        />
     {/each}
 
     <AddUrlButton
+        class="mt-1rem"
         onclick={() => {
             selectedTabIOCState!.urls.push('');
         }}

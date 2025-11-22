@@ -1,4 +1,5 @@
 <script lang="ts">
+    import iconSrc from '@src/assets/logo/logo.svg';
     import SelectedIOCPanel from '@src/lib/components/popup/SelectedIOCPanel.svelte';
     import Switch from '@src/lib/components/popup/Switch.svelte';
     import TitleBar from '@src/lib/components/popup/TitleBar.svelte';
@@ -29,7 +30,7 @@
 
 <div class="header pb-2rem btm-border">
     <TitleBar
-        iconSrc="/assets/logo/logo.svg"
+        {iconSrc}
         title="IOC Intel"
     />
     <TabSelector {tabState} />

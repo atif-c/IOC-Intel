@@ -20,8 +20,8 @@
         --tab-spacing: 0.25rem;
         display: flex;
         gap: var(--tab-spacing);
-        padding: var(--tab-spacing);
-        border-radius: 0.25rem;
         box-shadow: var(--shadow-lg);
+        border-radius: 0.25rem;
+        padding: var(--tab-spacing);
     }
 </style>

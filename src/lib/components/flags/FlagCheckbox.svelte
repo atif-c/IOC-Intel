@@ -24,8 +24,8 @@
         input[type='checkbox'] {
             position: absolute;
             opacity: 0;
-            width: 0;
             height: 0;
+            width: 0;
 
             &:checked + .box {
                 box-shadow: var(--shadow-md-inset), var(--shadow-lg);
@@ -42,22 +42,23 @@
 
         .box {
             position: relative;
-            width: 1.5rem;
             height: 1.5rem;
-            border-radius: 0.25rem;
+            width: 1.5rem;
             box-shadow: var(--shadow-lg);
+            border-radius: 0.25rem;
 
             &::after {
                 position: absolute;
-                background-color: var(--clr-positive);
-                content: '';
-                height: 60%;
-                width: 60%;
+                transform: translate(-50%, -50%);
                 top: 50%;
                 left: 50%;
-                border-radius: 0.1rem;
-                transform: translate(-50%, -50%);
                 opacity: 0;
+                height: 60%;
+                width: 60%;
+                border-radius: 0.1rem;
+                background-color: var(--clr-positive);
+                content: '';
+                
                 transition:
                     opacity 0.1s,
                     transform 0.1s;

@@ -1,7 +1,11 @@
 <script lang="ts">
     import { isValidUrl, normaliseUrl } from '@src/lib/IOC/ioc-utils';
+    import type { HTMLAttributes } from 'svelte/elements';
 
-    let { url = $bindable() }: { url: string } = $props();
+    let {
+        url = $bindable(),
+        ...restProps
+    }: { url: string } & HTMLAttributes<HTMLInputElement> = $props();
     let focused = $state(false);
 
     const shortUrl = (URLString: string) => {
@@ -29,28 +33,25 @@
 
 <input
     type="text"
+    class:invalid={!isValidUrl(url) && url.length > 0}
     value={focused ? url : shortUrl(url)}
+    placeholder={url.length === 0 ? 'Enter a URL' : undefined}
     {oninput}
     {onfocus}
     {onblur}
-    placeholder={url.length === 0 ? 'Enter a URL' : undefined}
-    class:invalid={!isValidUrl(url) && url.length > 0}
+    {...restProps}
 />
 
 <style>
     input[type='text'] {
-        outline: none;
-
-        color: var(--clr-muted);
         width: 100%;
-        background-color: transparent;
-        padding: 0.5rem 1rem;
+        box-shadow: var(--shadow-lg), var(--shadow-lg-inset);
+        outline: none;
         border: transparent;
         border-radius: 0.25rem;
-
-        box-shadow: var(--shadow-lg), var(--shadow-lg-inset);
-
-        margin-top: 1rem;
+        background-color: transparent;
+        padding: 0.5rem 1rem;
+        color: var(--clr-muted);
 
         &:focus {
             color: var(--clr-light);

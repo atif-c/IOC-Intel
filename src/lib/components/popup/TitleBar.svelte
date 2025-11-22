@@ -1,12 +1,12 @@
 <script lang="ts">
     let { iconSrc, title }: { iconSrc: string; title: string } = $props();
+    const alt: string = 'IOC Intel Icon';
 </script>
 
 <div class="title-bar">
     <img
-        class="icon"
-        alt="icon"
         src={iconSrc}
+        {alt}
     />
     <h1>{title}</h1>
 </div>
@@ -16,9 +16,9 @@
         display: flex;
         align-items: center;
 
-        .icon {
-            width: 1.5rem;
+        img {
             height: 1.5rem;
+            width: 1.5rem;
             margin-right: 0.5rem;
         }
     }

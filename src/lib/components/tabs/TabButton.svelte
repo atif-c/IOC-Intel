@@ -15,11 +15,11 @@
 <style>
     button {
         cursor: pointer;
-        font-size: 0.75rem;
-        background-color: transparent;
-        padding: 0.25rem 0.75rem;
         border: none;
         border-radius: 0.25rem;
+        background-color: transparent;
+        padding: 0.25rem 0.75rem;
+        font-size: 0.75rem;
         transition: box-shadow 0.1s;
 
         &.selected {

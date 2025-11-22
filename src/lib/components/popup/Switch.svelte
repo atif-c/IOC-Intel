@@ -11,7 +11,6 @@
 
 <label class="switch">
     <input
-        class="checkbox"
         type="checkbox"
         bind:checked
         {...restProps}
@@ -22,10 +21,10 @@
 <style>
     .switch {
         /* Base dimensions */
-        --switch-width: 3rem;
         --switch-height: 1.5rem;
-        --switch-radius: 0.25rem;
+        --switch-width: 3rem;
         --switch-shadow: var(--shadow-lg), var(--shadow-lg-inset);
+        --switch-radius: 0.25rem;
         --slider-transition: transform 0.25s;
 
         /* Slider positioning */
@@ -51,13 +50,13 @@
         cursor: pointer;
         position: relative;
         display: inline-block;
-        width: var(--switch-width);
         height: var(--switch-height);
+        width: var(--switch-width);
 
-        .checkbox {
+        input[type='checkbox'] {
             opacity: 0;
-            width: 0;
             height: 0;
+            width: 0;
 
             &:checked + .slider::before {
                 transform: translateX(var(--slider-translate-x));
@@ -72,19 +71,19 @@
         .slider {
             position: absolute;
             inset: 0;
-            background-color: transparent;
-            border-radius: var(--switch-radius);
             box-shadow: var(--switch-shadow);
+            border-radius: var(--switch-radius);
+            background-color: transparent;
 
             &::before {
                 position: absolute;
-                content: '';
-                background-color: var(--clr-negative);
-                border-radius: var(--slider-radius);
-                width: var(--slider-width);
-                height: var(--slider-height);
-                left: var(--slider-left);
                 top: var(--slider-top);
+                left: var(--slider-left);
+                height: var(--slider-height);
+                width: var(--slider-width);
+                border-radius: var(--slider-radius);
+                background-color: var(--clr-negative);
+                content: '';
                 transition: var(--slider-transition);
             }
         }
