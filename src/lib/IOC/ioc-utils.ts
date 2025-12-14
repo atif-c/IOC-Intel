@@ -28,20 +28,19 @@ export const normaliseString = (string: string): string =>
 
 /**
  * Ensures that a URL string starts with a valid protocol (`http://` or `https://`).
- *
- * If the input does not start with `http://` or `https://` (case-insensitive),
+ * If the input does not start with a protocol (case-insensitive check),
  * it prepends `https://` to the string.
  *
- * @param {string} input - The URL string to normalise.
- * @returns {string} The normalised URL with a protocol.
+ * @param {string} input - URL string to normalise
+ * @returns {string} Normalised URL with a protocol prefix
  *
  * @example
  * normaliseUrl('example.com'); // returns 'https://example.com'
  * normaliseUrl('http://example.com'); // returns 'http://example.com'
  */
-export const normaliseUrl = (input: string) => {
+export const normaliseUrl = (input: string): string => {
     if (!/^https?:\/\//i.test(input)) {
-        return 'https://' + input;
+        return `https://${input}`;
     }
     return input;
 };
