@@ -147,7 +147,7 @@ export class PreferencesState {
      *
      */
     getSelectedTabsIOCState = (tabState: TabState) => {
-        return this.state[tabState.selectedTab!.id as keyof Preferences] as
+        return this.stateManager.state[tabState.selectedTab!.id as keyof Preferences] as
             | IOCDefinition
             | undefined;
     };
