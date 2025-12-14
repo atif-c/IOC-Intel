@@ -1,3 +1,4 @@
+import { copyToClipboard } from '@src/lib/browser/browser-utils';
 import {
     type Flag,
     type Preferences,
@@ -271,4 +272,49 @@ export const getFlagValue = (
     }
 
     return undefined;
+};
+
+/**
+ * Handles copying an IOC to the clipboard with optional sanitisation.
+ *
+ * @param {string} ioc - IOC value to copy
+ * @param {Flag[]} flags - Array of user preference flags
+ * @returns {void}
+ *
+ * @example
+ * handleCopyToClipboard('192.168.1.1', flags, 'ip');
+ */
+export const handleCopyToClipboard = (ioc: string, flags: Flag[]): void => {
+    const iocType: keyof Preferences | null = detectIOCType(ioc);
+    let shouldCopy: boolean = false;
+    let shouldSanitise: boolean = false;
+
+    switch (iocType) {
+        case 'ip':
+            shouldCopy = getFlagValue(flags, ['Copy IP']) ?? shouldCopy;
+            shouldSanitise =
+                getFlagValue(flags, ['Copy IP', 'Sanitise IP']) ??
+                shouldSanitise;
+            break;
+        case 'hash':
+            shouldCopy = getFlagValue(flags, ['Copy Hash']) ?? shouldCopy;
+            break;
+        case 'url':
+            shouldCopy = getFlagValue(flags, ['Copy URL']) ?? shouldCopy;
+            shouldSanitise =
+                getFlagValue(flags, ['Copy URL', 'Sanitise URL']) ??
+                shouldSanitise;
+            break;
+        default:
+            return;
+    }
+
+    if (!shouldCopy) return;
+
+    let toCopy: string = ioc;
+    if (shouldSanitise) {
+        toCopy = iocType === 'ip' ? sanitiseIP(ioc) : sanitiseURL(ioc);
+    }
+
+    copyToClipboard(toCopy);
 };
