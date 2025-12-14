@@ -210,6 +210,46 @@ export const processUrlTemplate = (
 };
 
 /**
+ * Sanitises an IP address by replacing the last dot or colon with bracket notation
+ * to prevent accidental clicks in security contexts.
+ *
+ * IPv4 example: "192.168.1.1" becomes "192.168.1[.]1"
+ * IPv6 example: "2001:db8::1" becomes "2001:db8:[:]1"
+ *
+ * @param {string} ip - IP address to sanitise
+ * @returns {string} Sanitised IP address with bracket notation
+ *
+ * @example
+ * sanitiseIP('192.168.1.1'); // Returns: '192.168.1[.]1'
+ * sanitiseIP('2001:db8::1'); // Returns: '2001:db8:[:]1'
+ */
+export const sanitiseIP = (ip: string): string => {
+    const lastDot: number = ip.lastIndexOf('.');
+    const lastColon: number = ip.lastIndexOf(':');
+
+    if (lastDot > lastColon) {
+        return ip.slice(0, lastDot) + '[.]' + ip.slice(lastDot + 1);
+    } else if (lastColon > -1) {
+        return ip.slice(0, lastColon) + '[:]' + ip.slice(lastColon + 1);
+    }
+
+    return ip;
+};
+
+/**
+ * Sanitises a URL by replacing all dots with bracket notation
+ * to prevent accidental clicks in security contexts.
+ *
+ * @param {string} url - URL to sanitise
+ * @returns {string} Sanitised URL with all dots replaced by '[.]'
+ *
+ * @example
+ * sanitiseURL('example.com'); // Returns: 'example[.]com'
+ * sanitiseURL('https://malicious.site.com'); // Returns: 'https://malicious[.]site[.]com'
+ */
+export const sanitiseURL = (url: string): string => url.replace(/\./g, '[.]');
+
+/**
  * Get the value of a flag by path.
  * @param flags - array of flags
  * @param path - array of names leading to the target flag
