@@ -51,44 +51,6 @@ export const normaliseUrl = (input: string): string => {
 };
 
 /**
- * Recursively traverses an object and executes a callback for every array found
- * under a key named "urls" (case-insensitive).
- *
- * @param {any} obj - The object to traverse.
- * @param {(arr: string[], parent: any, key: string) => void} callback -
- *   Function to call for each "urls" array found. Receives the array, the
- *   parent object containing the array, and the key name.
- *
- * @example
- * const data = {
- *   ip: { urls: ['example.com', 'test.com'] },
- *   nested: { urls: ['nested.com'] }
- * };
- *
- * forEachUrls(data, (urls, parent, key) => {
- *   console.log(urls); // Logs each array of URLs
- * });
- */
-export const forEachUrls = (
-    obj: any,
-    callback: (arr: string[], parent: any, key: string) => void
-) => {
-    function traverse(value: any) {
-        if (Array.isArray(value)) {
-            value.forEach(item => traverse(item));
-        } else if (typeof value === 'object' && value !== null) {
-            for (const [key, val] of Object.entries(value)) {
-                if (key.toLowerCase() === 'urls' && Array.isArray(val)) {
-                    callback(val, value, key);
-                }
-                traverse(val);
-            }
-        }
-    }
-    traverse(obj);
-};
-
-/**
  * Validates whether a given string is a well-formed HTTP/HTTPS URL.
  * The string is normalised before validation.
  * Note: This validation allows URLs with or without protocols due to
@@ -317,4 +279,64 @@ export const handleCopyToClipboard = (ioc: string, flags: Flag[]): void => {
     }
 
     copyToClipboard(toCopy);
+};
+
+/**
+ * Recursively traverses an object and executes a callback function for
+ * every array found under a key named "urls" (case-insensitive). This
+ * is useful for processing nested IOC data structures where URLs may be
+ * stored at various levels.
+ *
+ * @param {any} obj - The object to traverse recursively
+ * @param {(arr: string[], parent: any, key: string) => void} callback -
+ *   Function to execute for each "urls" array found. Receives:
+ *   - arr: The array of URL strings
+ *   - parent: The parent object containing the array
+ *   - key: The key name (will be some variation of "urls")
+ * @returns {void}
+ *
+ * @example
+ * const data = {
+ *   ip: { urls: ['example.com', 'test.com'] },
+ *   nested: {
+ *     deeper: { urls: ['nested.com'] }
+ *   }
+ * };
+ *
+ * forEachUrls(data, (urls, parent, key) => {
+ *   console.log(`Found ${urls.length} URLs in ${key}`);
+ *   urls.forEach(url => console.log(url));
+ * });
+ */
+export const forEachUrls = (
+    obj: any,
+    callback: (arr: string[], parent: any, key: string) => void
+): void => {
+    /**
+     * Internal recursive function to traverse the object tree.
+     * Handles arrays, objects, and primitive values appropriately.
+     *
+     * @param {any} value - The current value being traversed
+     * @returns {void}
+     */
+    const traverse = (value: any): void => {
+        // Handle arrays by traversing each element
+        if (Array.isArray(value)) {
+            value.forEach((item: any) => traverse(item));
+        }
+        // Handle objects by checking keys and traversing nested values
+        else if (typeof value === 'object' && value !== null) {
+            for (const [key, val] of Object.entries(value)) {
+                // Check if this key is "urls" (case-insensitive) and contains an array
+                if (key.toLowerCase() === 'urls' && Array.isArray(val)) {
+                    callback(val, value, key);
+                }
+                // Continue traversing nested structures
+                traverse(val);
+            }
+        }
+        // Primitive values (string, number, boolean, etc.) are ignored
+    };
+
+    traverse(obj);
 };
