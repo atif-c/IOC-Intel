@@ -12,16 +12,19 @@ export const FULL_URL_PATTERN =
 export const DOMAIN_ONLY_PATTERN = /^([a-z0-9-]+\.)+[a-z]{2,}$/;
 
 /**
- * Normalises a string by trimming whitespace from both ends
+ * Normalises a string by removing square brackets, trimming whitespace,
  * and converting it to lowercase.
  *
- * @param {string} input - The string to normalise.
- * @returns {string} The trimmed and lowercased string.
+ * @param {string} string - String to normalise
+ * @returns {string} Normalised string with brackets removed, trimmed, and lowercased
  *
  * @example
- * normalise('  Hello World  '); // returns 'hello world'
+ * normaliseString('  1.2.3[.]4  '); // returns '1.2.3.4'
+ * normaliseString('[Test]'); // returns 'test'
+ * normaliseString('  EXAMPLE[.]COM  '); // returns 'example.com'
  */
-export const normaliseString = (input: string) => input.trim().toLowerCase();
+export const normaliseString = (string: string): string =>
+    string.replaceAll('[', '').replaceAll(']', '').trim().toLowerCase();
 
 /**
  * Ensures that a URL string starts with a valid protocol (`http://` or `https://`).
