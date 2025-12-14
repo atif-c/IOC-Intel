@@ -5,6 +5,7 @@
  */
 
 import archiver from 'archiver';
+import { build } from 'esbuild';
 import fs from 'fs';
 import path from 'path';
 
@@ -129,6 +130,43 @@ const zipDirectory = async (sourceDir, outPath) => {
     });
 };
 
+/**
+ * Transforms prompt.js to IIFE format for Firefox compatibility
+ */
+const transformPromptToIIFE = async distDir => {
+    const promptPath = path.join(distDir, 'entries', 'prompt.js');
+
+    if (!(await fileExists(promptPath))) {
+        console.warn(
+            `prompt.js not found at ${promptPath}, skipping IIFE transformation`
+        );
+        return;
+    }
+
+    try {
+        // Use esbuild build API to bundle and transform to IIFE
+        const result = await build({
+            entryPoints: [promptPath],
+            bundle: true,
+            format: 'iife',
+            target: 'es2015',
+            outfile: promptPath,
+            write: false,
+            absWorkingDir: distDir,
+            resolveExtensions: ['.js', '.mjs'],
+        });
+
+        if (result.outputFiles && result.outputFiles.length > 0) {
+            await fsp.writeFile(promptPath, result.outputFiles[0].text, 'utf8');
+            console.log(`Transformed prompt.js to IIFE format`);
+        } else {
+            console.warn(`esbuild transformation produced no output`);
+        }
+    } catch (error) {
+        console.warn(`Failed to transform prompt.js to IIFE: ${error.message}`);
+    }
+};
+
 const buildTarget = async target => {
     if (!targets.includes(target)) throw new Error(`Unknown target: ${target}`);
 
@@ -142,6 +180,9 @@ const buildTarget = async target => {
 
     // Copy vite output first (so files exist), but filter out manifests within vite output to be safe
     await copyViteOutputTo(distDir);
+
+    // Transform prompt.js to IIFE
+    await transformPromptToIIFE(distDir);
 
     // Now write the merged manifest (after copy so it cannot be overwritten)
     await writeJsonAtomic(path.join(distDir, 'manifest.json'), manifest);

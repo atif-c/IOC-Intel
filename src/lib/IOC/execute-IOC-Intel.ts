@@ -96,3 +96,14 @@ export const executeIOCIntel = async (
         return false;
     }
 };
+
+/**
+ * Request type for executing IOC intel  operations.
+ * Used for message passing between different parts of the extension.
+ */
+export type executeIOCIntelRequest = {
+    /** The action identifier for this request type */
+    action: 'executeIOCIntel';
+    /** The IOC value to investigate */
+    IOC: string;
+};

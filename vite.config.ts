@@ -24,6 +24,7 @@ export default defineConfig({
             input: {
                 popup: 'src/popup/popup.html',
                 background: 'src/lib/browser/background.ts',
+                prompt: 'src/lib/browser/prompt.ts',
             },
             output: {
                 assetFileNames: 'assets/[name][extname]',

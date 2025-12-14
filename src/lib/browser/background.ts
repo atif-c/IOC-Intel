@@ -4,6 +4,33 @@ import { PreferencesState } from '@src/lib/storage/preferences-state.svelte';
 import Browser from 'webextension-polyfill';
 
 /**
+ * Handles runtime messages dispatched to the background script.
+ *
+ * When a message requests IOC execution, this handler validates the message,
+ * normalises the IOC, and runs it through executeIOCIntel.
+ *
+ * @param {unknown} message - Incoming message
+ * @returns {Promise<boolean>} - Promise that resolves to `true` if IOC execution succeeded.
+ * Resolves to `false` if the message is not a executeIOCIntelRequest, IOC
+ * validation failed or the IOC type is inactive.
+ */
+const handleRuntimeMessage = (message: unknown): Promise<boolean> => {
+    // Check if the message is of type executeIOCIntelRequest
+    if (typeof message !== 'object' || message === null)
+        return Promise.resolve(false);
+
+    const msg = message as Record<string, unknown>;
+
+    if (msg.action !== 'executeIOCIntel' || typeof msg.IOC !== 'string')
+        return Promise.resolve(false);
+
+    // Proceed with the normalisation and execution logic
+    const normalisedIOC: string = normaliseString(msg.IOC);
+
+    return executeIOCIntel(normalisedIOC);
+};
+
+/**
  * Handles context menu clicks.
  * Executes IOC Intel investigation on the selected text if the menu item is valid.
  *
@@ -24,6 +51,10 @@ async function init() {
     Browser.storage.onChanged.addListener((): void => {
         PreferencesState.getInstance().stateManager.load();
     });
+
+    // Listen for runtime messages from other extension components
+    Browser.runtime.onMessage.addListener(handleRuntimeMessage);
+
     // Listen for context menu clicks to trigger IOC Intel investigations
     Browser.contextMenus.onClicked.addListener(handleContextMenuClick);
 }
