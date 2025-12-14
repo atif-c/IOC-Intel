@@ -116,7 +116,6 @@ export class PreferencesState {
         const cleaned = cleanObject(state as {}, defaultPreferences);
 
         await getStorageArea().set(cleaned);
-        await this.#loadState();
     };
 
     /**
