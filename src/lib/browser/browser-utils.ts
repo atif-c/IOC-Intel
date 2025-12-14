@@ -73,6 +73,24 @@ export const setContextMenuItems = async (preferences: Preferences) => {
 };
 
 /**
+ * Gets the tab index where new tabs should be inserted (after the current active tab).
+ *
+ * @returns {Promise<number>} Index position for new tabs, or 0 if no active tab is found
+ * @throws {Error} If browser tabs API query fails
+ *
+ * @example
+ * const tabIndex = await getTabInsertionIndex(); // Returns: 3 (if active tab is at index 2)
+ */
+export const getTabInsertionIndex = async (): Promise<number> => {
+    const [activeTab] = await Browser.tabs.query({
+        active: true,
+        currentWindow: true,
+    });
+
+    return activeTab?.index !== undefined ? activeTab.index + 1 : 0;
+};
+
+/**
  * Copies text to the clipboard by injecting a script into the active tab.
  *
  * Uses the browser's scripting API to inject a script that writes to the clipboard
