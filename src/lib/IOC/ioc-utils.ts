@@ -1,4 +1,7 @@
-import { type Flag } from '@src/lib/storage/default-preferences';
+import {
+    type Flag,
+    type Preferences,
+} from '@src/lib/storage/default-preferences';
 
 export const IPV4_PATTERN =
     /^(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)(\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)){3}$/;
@@ -107,6 +110,47 @@ export const isValidUrl = (input: string): boolean => {
 
     // Protocol is optional in the pattern
     return FULL_URL_PATTERN.test(normalised);
+};
+
+/**
+ * Detects the IOC type of a given string.
+ * The input text is normalised before pattern checks.
+ *
+ * Supported IOC types:
+ * - 'ip': IPv4 or IPv6 addresses
+ * - 'hash': MD5, SHA-1, or SHA-256 hashes
+ * - 'url': Full HTTP/HTTPS URLs
+ *
+ * @param {string} string - String to analyse for IOC type
+ * @returns {keyof Preferences | null} Detected IOC type key from Preferences, or null if no match
+ *
+ * @example
+ * detectIOCType('192.168.1.1'); // returns 'ip'
+ * detectIOCType('44d88612fea8a8f36de82e1278abb02f'); // returns 'hash'
+ * detectIOCType('https://example.com'); // returns 'url'
+ * detectIOCType('random text'); // returns null
+ *
+ * TODO: make less static
+ *
+ */
+export const detectIOCType = (string: string): keyof Preferences | null => {
+    const normalised: string = normaliseString(string);
+
+    if (normalised.length === 0) return null;
+
+    if (IPV4_PATTERN.test(normalised) || IPV6_PATTERN.test(normalised)) {
+        return 'ip';
+    }
+
+    if (HASH_PATTERN.test(normalised)) {
+        return 'hash';
+    }
+
+    if (FULL_URL_PATTERN.test(normalised)) {
+        return 'url';
+    }
+
+    return null;
 };
 
 /**
