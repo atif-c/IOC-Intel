@@ -3,12 +3,10 @@ import { normaliseString } from '@src/lib/IOC/ioc-utils';
 import { PreferencesState } from '@src/lib/storage/preferences-state.svelte';
 import Browser from 'webextension-polyfill';
 
-const preferences = PreferencesState.getInstance();
-
 async function init() {
-    // Keep preferences updated when storage changes
-    Browser.storage.onChanged.addListener(() => {
-        preferences.stateManager.load();
+    // Listen for storage changes and reload preferences automatically
+    Browser.storage.onChanged.addListener((): void => {
+        PreferencesState.getInstance().stateManager.load();
     });
 
     // Handle context menu clicks
