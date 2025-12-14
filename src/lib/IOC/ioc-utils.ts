@@ -170,6 +170,46 @@ export const isValidAndActiveIOCType = async (
 };
 
 /**
+ * Processes URL templates by replacing placeholders with the actual IOC value.
+ *
+ * @param {string} templateUrl - URL template containing placeholders
+ * @returns {string} Processed URL with placeholders replaced
+ * @throws {TypeError} If URL parsing fails for URL-type IOCs
+ *
+ * @example
+ * processUrlTemplate('https://lookup.com?ip={ip}', '192.168.1.1', 'ip');
+ * // Returns: 'https://lookup.com?ip=192.168.1.1'
+ */
+export const processUrlTemplate = (
+    templateUrl: string,
+    ioc: string
+): string => {
+    const iocType: keyof Preferences | null = detectIOCType(ioc);
+    let processedUrl: string = templateUrl;
+
+    switch (iocType) {
+        case 'ip':
+            processedUrl = processedUrl.replace('{ip}', ioc);
+            break;
+        case 'hash':
+            processedUrl = processedUrl.replace('{hash}', ioc);
+            break;
+        case 'url': {
+            const normalisedUrl: string = normaliseUrl(ioc);
+            const urlObject: URL = new URL(normalisedUrl);
+
+            processedUrl = processedUrl
+                .replace('{url}', normalisedUrl)
+                .replace('{encodedUrl}', encodeURIComponent(normalisedUrl))
+                .replace('{domain}', urlObject.hostname);
+            break;
+        }
+    }
+
+    return normaliseUrl(processedUrl);
+};
+
+/**
  * Get the value of a flag by path.
  * @param flags - array of flags
  * @param path - array of names leading to the target flag
