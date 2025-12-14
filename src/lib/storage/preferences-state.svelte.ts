@@ -1,6 +1,5 @@
 import {
     getStorageArea,
-    removeContextMenuItems,
     setContextMenuItem,
 } from '@src/lib/browser/browser-utils';
 import { TabState } from '@src/lib/components/tabs/tab-state.svelte';
@@ -101,8 +100,6 @@ export class PreferencesState {
         });
 
         const cleaned = cleanObject(raw, defaultPreferences);
-
-        await removeContextMenuItems();
 
         await setContextMenuItem(cleaned);
 

@@ -18,7 +18,7 @@ export const getStorageArea = (): Browser.Storage.StorageArea => {
  * @returns {Promise<void>} Promise that resolves once all context menu items have been removed
  * @throws {Error} If the browser API fails to remove context menu items
  */
-export const removeContextMenuItems = async (): Promise<void> => {
+const removeContextMenuItems = async (): Promise<void> => {
     try {
         return Browser.contextMenus.removeAll();
     } catch (err) {
