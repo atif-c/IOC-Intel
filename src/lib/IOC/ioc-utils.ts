@@ -2,6 +2,7 @@ import {
     type Flag,
     type Preferences,
 } from '@src/lib/storage/default-preferences';
+import { PreferencesState } from '@src/lib/storage/preferences-state.svelte';
 
 export const IPV4_PATTERN =
     /^(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)(\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)){3}$/;
@@ -151,6 +152,21 @@ export const detectIOCType = (string: string): keyof Preferences | null => {
     }
 
     return null;
+};
+
+/**
+ * Validates that the IOC type exists in preferences and is active.
+ *
+ * @param {keyof Preferences} iocType - IOC type to validate
+ * @returns {boolean} True if the IOC type is valid and active, false otherwise
+ */
+export const isValidAndActiveIOCType = async (
+    iocType: keyof Preferences
+): Promise<boolean> => {
+    const prefsState = await PreferencesState.getInstance().getState();
+    const ioc = prefsState[iocType];
+
+    return Boolean(ioc?.active);
 };
 
 /**
