@@ -1,8 +1,8 @@
-import Browser from 'webextension-polyfill';
 import type {
     IOCDefinition,
     Preferences,
 } from '@src/lib/storage/default-preferences';
+import Browser from 'webextension-polyfill';
 
 export const useLocalStorage = false;
 
@@ -18,10 +18,15 @@ export const getStorageArea = (): Browser.Storage.StorageArea => {
 /**
  * Removes any previously added context menu items from the browser extension.
  *
- * @returns {Promise<void>} A promise that resolves once all context menu items have been removed.
+ * @returns {Promise<void>} Promise that resolves once all context menu items have been removed
+ * @throws {Error} If the browser API fails to remove context menu items
  */
-export const removeContextMenuItems = async () => {
-    await Browser.contextMenus.removeAll();
+export const removeContextMenuItems = async (): Promise<void> => {
+    try {
+        return Browser.contextMenus.removeAll();
+    } catch (err) {
+        throw new Error(`Failed to remove context menu items: ${err}`);
+    }
 };
 
 /**
@@ -68,27 +73,31 @@ export const setContextMenuItems = async (preferences: Preferences) => {
 };
 
 /**
- * Copies the provided text to the clipboard in the context of the active browser tab.
+ * Copies text to the clipboard by injecting a script into the active tab.
  *
- * Uses the browser's scripting API to execute a script that writes the text
- * to the clipboard. Throws an error if no active tab is found.
+ * Uses the browser's scripting API to inject a script that writes to the clipboard
+ * using the Clipboard API. This approach is necessary because browser extensions
+ * require a user interaction context to access the clipboard directly.
  *
- * @param {string} text - The text to copy to the clipboard.
- * @returns {Promise<void>} A promise that resolves once the text has been copied.
- *
- * @throws {Error} If there is no active tab available to execute the script
+ * @param {string} text - Text to copy to the clipboard
+ * @returns {Promise<Browser.Scripting.InjectionResult[]>} Promise that resolves with the script execution results
+ * @throws {Error} If no active tab is found, if the browser API fails to execute the script
+ *                 if the clipboard write operation fails, or if the tab doesn't support script injection
  */
-export const copyToClipboard = async (text: string) => {
-    const [tab] = await Browser.tabs.query({
+export const copyToClipboard = async (
+    text: string
+): Promise<Browser.Scripting.InjectionResult[]> => {
+    const [tab]: Browser.Tabs.Tab[] = await Browser.tabs.query({
         active: true,
         currentWindow: true,
     });
+
     if (!tab?.id) throw new Error('No active tab found');
 
-    await Browser.scripting.executeScript({
+    return Browser.scripting.executeScript({
         target: { tabId: tab.id },
-        func: (t: string) => {
-            navigator.clipboard.writeText(t).catch(console.error);
+        func: async (t: string): Promise<void> => {
+            await navigator.clipboard.writeText(t);
         },
         args: [text],
     });
