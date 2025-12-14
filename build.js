@@ -1,7 +1,7 @@
 /** Usage:
  *   node build-targets.js           # builds all targets in parallel
  *   node build-targets.js all       # same as above
- *   node build-targets.js firefox   # build single target
+ *   node build-targets.js [firefox|chromium]   # build single target
  */
 
 import archiver from 'archiver';

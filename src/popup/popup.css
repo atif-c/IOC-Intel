@@ -23,7 +23,7 @@
 
     /* Unified neumorphic shadows */
     --clr-shadow-light: rgba(255, 255, 255, 0.05);
-    --clr-shadow-dark: rgba(0, 0, 0, 0.5); /* .4 */
+    --clr-shadow-dark: rgba(0, 0, 0, 0.5);
 
     /* General UI */
     --clr-selected: rgb(150, 150, 255);

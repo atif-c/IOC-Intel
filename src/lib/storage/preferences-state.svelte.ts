@@ -22,7 +22,7 @@ export class PreferencesState {
     autoSaveEffectRegistered = false;
 
     /**
-     * Initializes the preferences state manager and attempts to load
+     * Initialises the preferences state manager and attempts to load
      * persisted state from storage.
      *
      * The constructor sets up a `StateManager` with the following options:
@@ -31,7 +31,7 @@ export class PreferencesState {
      *
      * If loading from storage fails, the error is logged, and continues
      * by using the default state.
-     * @throws Logs an error if storage cannot be loaded
+     * @throws If storage cannot be loaded
      */
     private constructor() {
         this.stateManager = new StateManager<Preferences>(
@@ -49,9 +49,9 @@ export class PreferencesState {
     }
 
     /**
-     * Get the global {@link PreferencesState} singleton instance.
+     * Gets the global {@link PreferencesState} singleton instance.
      *
-     * @returns {PreferencesState} The single, eagerly-created instance.
+     * @returns {PreferencesState} Single, eagerly-created instance
      */
     static getInstance(): PreferencesState {
         return PreferencesState.instance;
@@ -119,7 +119,7 @@ export class PreferencesState {
     };
 
     /**
-     * Initializes auto-saving for the application state.
+     * Initialises auto-saving for the application state.
      *
      * Call this once in the root component or layout to enable automatic saving.
      * Registers an effect that tracks deep changes in the state and triggers
@@ -139,16 +139,16 @@ export class PreferencesState {
     };
 
     /**
-     * Retrieves the IOC (Indicator of Compromise) state for the currently
+     * Gets the IOC (Indicator of Compromise) state for the currently
      * selected tab in a given `TabState`.
      *
-     * @param {TabState} tabState - The `TabState` containing information about the currently selected tab.
-     * @returns {IOCDefinition | undefined} The IOC state associated with the selected tab, or `undefined` if not found.
+     * @param {TabState} tabState - `TabState` containing information about the currently selected tab
+     * @returns {IOCDefinition | undefined} IOC state associated with the selected tab, or `undefined` if not found
      *
      */
     getSelectedTabsIOCState = (tabState: TabState) => {
-        return this.stateManager.state[tabState.selectedTab!.id as keyof Preferences] as
-            | IOCDefinition
-            | undefined;
+        return this.stateManager.state[
+            tabState.selectedTab!.id as keyof Preferences
+        ] as IOCDefinition | undefined;
     };
 }

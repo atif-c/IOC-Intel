@@ -5,16 +5,102 @@ import {
 } from '@src/lib/storage/default-preferences';
 import { PreferencesState } from '@src/lib/storage/preferences-state.svelte';
 
-export const IPV4_PATTERN =
+/**
+ * Regular expression pattern for matching IPv4 addresses.
+ * Matches standard dotted-decimal notation (e.g., 192.168.1.1).
+ * Each octet must be between 0-255.
+ *
+ * @type {RegExp}
+ * @constant
+ * @example
+ * IPV4_PATTERN.test('192.168.1.1'); // true
+ * IPV4_PATTERN.test('255.255.255.0'); // true
+ * IPV4_PATTERN.test('256.1.1.1'); // false (invalid octet > 255)
+ * IPV4_PATTERN.test('10.0.0'); // false (missing octet)
+ */
+export const IPV4_PATTERN: RegExp =
     /^(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)(\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)){3}$/;
 
-export const IPV6_PATTERN =
+/**
+ * Regular expression pattern for matching IPv6 addresses.
+ * Supports multiple IPv6 formats:
+ * - Full format: 2001:0db8:85a3:0000:0000:8a2e:0370:7334
+ * - Compressed format: 2001:db8::1
+ * - Link-local with zone ID: fe80::1%eth0
+ * - IPv4-mapped IPv6: ::ffff:192.0.2.1
+ * - Mixed notation: ::ffff:192.0.2.1
+ *
+ * @type {RegExp}
+ * @constant
+ * @example
+ * IPV6_PATTERN.test('2001:0db8:85a3:0000:0000:8a2e:0370:7334'); // true (full)
+ * IPV6_PATTERN.test('::1'); // true (loopback compressed)
+ * IPV6_PATTERN.test('fe80::1%eth0'); // true (link-local with zone)
+ * IPV6_PATTERN.test('::ffff:192.0.2.1'); // true (IPv4-mapped)
+ */
+export const IPV6_PATTERN: RegExp =
     /^(([a-f0-9]{1,4}:){7,7}[a-f0-9]{1,4}|([a-f0-9]{1,4}:){1,7}:|([a-f0-9]{1,4}:){1,6}:[a-f0-9]{1,4}|([a-f0-9]{1,4}:){1,5}(:[a-f0-9]{1,4}){1,2}|([a-f0-9]{1,4}:){1,4}(:[a-f0-9]{1,4}){1,3}|([a-f0-9]{1,4}:){1,3}(:[a-f0-9]{1,4}){1,4}|([a-f0-9]{1,4}:){1,2}(:[a-f0-9]{1,4}){1,5}|[a-f0-9]{1,4}:((:[a-f0-9]{1,4}){1,6})|:((:[a-f0-9]{1,4}){1,7}|:)|fe80:(:[a-f0-9]{0,4}){0,4}%[0-9a-zA-Z]{1,}|::(ffff(:0{1,4}){0,1}:){0,1}((25[0-5]|(2[0-4]|1{0,1}[0-9]){0,1}[0-9])\.){3,3}(25[0-5]|(2[0-4]|1{0,1}[0-9]){0,1}[0-9])|([a-f0-9]{1,4}:){1,4}:((25[0-5]|(2[0-4]|1{0,1}[0-9]){0,1}[0-9])\.){3,3}(25[0-5]|(2[0-4]|1{0,1}[0-9]){0,1}[0-9]))$/i;
-// Hashes (MD5, SHA1, SHA256)
-export const HASH_PATTERN = /^[a-f0-9]{32}$|^[a-f0-9]{40}$|^[a-f0-9]{64}$/i;
-export const FULL_URL_PATTERN =
+
+/**
+ * Regular expression pattern for matching common cryptographic hash values.
+ * Supports MD5 (32 hex), SHA-1 (40 hex), and SHA-256 (64 hex).
+ *
+ * Case-insensitive matching (both uppercase and lowercase hex digits accepted).
+ *
+ * @type {RegExp}
+ * @constant
+ * @example
+ * HASH_PATTERN.test('5d41402abc4b2a76b9719d911017c592'); // true (MD5, 32 chars)
+ * HASH_PATTERN.test('356a192b7913b04c54574d18c28d46e6395428ab'); // true (SHA-1, 40 chars)
+ * HASH_PATTERN.test('e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855'); // true (SHA-256, 64 chars)
+ * HASH_PATTERN.test('invalid'); // false (not a valid hash)
+ */
+export const HASH_PATTERN: RegExp =
+    /^[a-f0-9]{32}$|^[a-f0-9]{40}$|^[a-f0-9]{64}$/i;
+
+/**
+ * Regular expression pattern for matching HTTP/HTTPS URLs.
+ * Supports:
+ * - Optional protocol (http:// or https://) - if missing, handled by normaliseUrl
+ * - Optional authentication (username:password@)
+ * - Domain with TLD (e.g., example.com, sub.domain.co.uk)
+ * - Optional port (e.g., :8080, :3000)
+ * - Optional path (e.g., /path/to/resource)
+ * - Optional query string (e.g., ?key=value&foo=bar)
+ * - Optional fragment/hash (e.g., #section)
+ *
+ * Case-insensitive matching for protocol and domain.
+ *
+ * @type {RegExp}
+ * @constant
+ * @example
+ * FULL_URL_PATTERN.test('https://example.com/path'); // true
+ * FULL_URL_PATTERN.test('http://user:pass@localhost:8080/api?key=value#top'); // true
+ * FULL_URL_PATTERN.test('example.com'); // true (protocol optional)
+ * FULL_URL_PATTERN.test('ftp://example.com'); // false (only http/https supported)
+ */
+export const FULL_URL_PATTERN: RegExp =
     /^(https?:\/\/)?(([^\s:@\/]+(:[^\s:@\/]*)?@)?((?:[a-z0-9-]+\.)+[a-z]{2,})(:\d{2,5})?(\/[^\s]*)?(\?[^\s#]*)?(#[^\s]*)?)$/i;
-export const DOMAIN_ONLY_PATTERN = /^([a-z0-9-]+\.)+[a-z]{2,}$/;
+
+/**
+ * Regular expression pattern for matching domain names without protocol.
+ * Validates domain structure:
+ * - One or more subdomains/labels (alphanumeric with hyphens)
+ * - Separated by dots
+ * - Ending with a TLD of at least 2 characters
+ *
+ * Does NOT match URLs with protocols, paths, or query strings.
+ *
+ * @type {RegExp}
+ * @constant
+ * @example
+ * DOMAIN_ONLY_PATTERN.test('example.com'); // true
+ * DOMAIN_ONLY_PATTERN.test('subdomain.example.co.uk'); // true
+ * DOMAIN_ONLY_PATTERN.test('my-domain.com'); // true
+ * DOMAIN_ONLY_PATTERN.test('https://example.com'); // false (has protocol)
+ * DOMAIN_ONLY_PATTERN.test('example'); // false (no TLD)
+ */
+export const DOMAIN_ONLY_PATTERN: RegExp = /^([a-z0-9-]+\.)+[a-z]{2,}$/;
 
 /**
  * Normalises a string by removing square brackets, trimming whitespace,
@@ -213,10 +299,30 @@ export const sanitiseIP = (ip: string): string => {
 export const sanitiseURL = (url: string): string => url.replace(/\./g, '[.]');
 
 /**
- * Get the value of a flag by path.
- * @param flags - array of flags
- * @param path - array of names leading to the target flag
- * @returns the value of the flag or undefined if not found
+ * Retrieves the value of a flag by traversing a nested flag structure
+ * using a path array. This allows for accessing deeply nested flag
+ * configurations in a type-safe manner.
+ *
+ * @param {Flag[]} flags - Array of top-level flags to search
+ * @param {string[]} path - Array of flag names representing the path to the target flag.
+ *                          The last element is the target flag name.
+ * @returns {boolean | undefined} The boolean value of the flag if found, undefined if not found
+ *
+ * @example
+ * const flags = [
+ *   {
+ *
+ *     name: 'security',
+ *     value: true,
+ *     subFlags: [
+ *       { name: 'strict', value: false, subFlags: [] }
+ *     ]
+ *   }
+ * ];
+ *
+ * getFlagValue(flags, ['security']); // returns true
+ * getFlagValue(flags, ['security', 'strict']); // returns false
+ * getFlagValue(flags, ['nonexistent']); // returns undefined
  */
 export const getFlagValue = (
     flags: Flag[],
@@ -224,12 +330,20 @@ export const getFlagValue = (
 ): boolean | undefined => {
     let currentLevel: Flag[] | undefined = flags;
 
+    // Traverse the path step by step
     for (const name of path) {
+        // Find the flag at the current level with matching name
         const found: Flag | undefined = currentLevel?.find(
-            f => f.name === name
+            (f: Flag) => f.name === name
         );
+
+        // If flag not found at this level, return undefined
         if (!found) return undefined;
+
+        // If this is the target flag (last in path), return its value
         if (name === path[path.length - 1]) return found.value;
+
+        // Otherwise, move to the next level (subFlags)
         currentLevel = found.subFlags;
     }
 

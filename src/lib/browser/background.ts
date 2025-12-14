@@ -46,7 +46,17 @@ const handleContextMenuClick = async (
     return executeIOCIntel(normalisedUserSelection);
 };
 
-async function init() {
+/**
+ * Initialises background script event listeners.
+ *
+ * This function establishes listeners for:
+ * - Storage changes: Automatically reloads preferences when browser storage is updated
+ * - Runtime messages: Processes IOC Intel execution requests from other extension components
+ * - Context menu clicks: Handles user-initiated IOC investigations via context menu
+ *
+ * @returns {Promise<void>} - Promise that resolves when all event listeners are successfully registered.
+ */
+const init = async (): Promise<void> => {
     // Listen for storage changes and reload preferences automatically
     Browser.storage.onChanged.addListener((): void => {
         PreferencesState.getInstance().stateManager.load();
@@ -57,6 +67,6 @@ async function init() {
 
     // Listen for context menu clicks to trigger IOC Intel investigations
     Browser.contextMenus.onClicked.addListener(handleContextMenuClick);
-}
+};
 
 init();

@@ -1,16 +1,21 @@
 import type { Preferences } from '@src/lib/storage/default-preferences';
 import Browser from 'webextension-polyfill';
 
-export const useLocalStorage = false;
+/**
+ * Configuration flag to determine which browser storage area to use.
+ * When `true`, uses `Browser.storage.local`; when `false`, uses `Browser.storage.sync`.
+ *
+ * @constant {boolean}
+ */
+export const useLocalStorage: boolean = false;
 
 /**
  * Returns the storage area based on the current `useLocalStorage` flag.
  *
- * @returns {Browser.Storage.StorageArea} The selected browser storage area.
+ * @returns {Browser.Storage.StorageArea} Browser storage area (local or sync)
  */
-export const getStorageArea = (): Browser.Storage.StorageArea => {
-    return useLocalStorage ? Browser.storage.local : Browser.storage.sync;
-};
+export const getStorageArea = (): Browser.Storage.StorageArea =>
+    useLocalStorage ? Browser.storage.local : Browser.storage.sync;
 
 /**
  * Removes any previously added context menu items from the browser extension.
