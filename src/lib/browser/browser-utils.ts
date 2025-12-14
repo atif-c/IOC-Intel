@@ -91,6 +91,27 @@ export const getTabInsertionIndex = async (): Promise<number> => {
 };
 
 /**
+ * Creates a new browser tab in the background at the specified index position.
+ *
+ * The tab is created but not activated, allowing it to load without switching focus.
+ *
+ * @param {string} url - URL to load in the new tab
+ * @param {number} index - Index position where the tab should be inserted
+ * @returns {Promise<Browser.Tabs.Tab>} Promise that resolves with the created tab object
+ * @throws {Error} If the browser API fails to create the tab
+ */
+export const createTab = async (
+    url: string,
+    index: number
+): Promise<Browser.Tabs.Tab> => {
+    try {
+        return Browser.tabs.create({ url, index, active: false });
+    } catch (err) {
+        throw new Error(`Failed to create tab with URL "${url}": ${err}`);
+    }
+};
+
+/**
  * Copies text to the clipboard by injecting a script into the active tab.
  *
  * Uses the browser's scripting API to inject a script that writes to the clipboard
