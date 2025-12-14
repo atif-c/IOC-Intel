@@ -1,7 +1,4 @@
-import type {
-    IOCDefinition,
-    Preferences,
-} from '@src/lib/storage/default-preferences';
+import type { Preferences } from '@src/lib/storage/default-preferences';
 import Browser from 'webextension-polyfill';
 
 export const useLocalStorage = false;
@@ -30,45 +27,41 @@ export const removeContextMenuItems = async (): Promise<void> => {
 };
 
 /**
- * Creates or updates a context menu item for the browser extension.
+ * Updates the  context menu based on configured user preferences.
  *
- * The menu item will appear in the context of a text selection.
+ * Removes all existing extension-owned context menu items, then conditionally
+ * creates the top-level "IOC Intel" menu entry if at least one IOC definition
+ * in the preferences is marked as active.
  *
- * @param {string} id - The unique identifier for the context menu item.
- * @param {string} title - The display title of the context menu item.
- * @returns {Promise<void>} A promise that resolves once the context menu item has been created or updated.
+ * The menu is only shown for text selections. No menu items are created when
+ * there are zero active IOC definitions.
  *
- * @throws {Error} If the browser API fails to create the context menu item
+ * @param preferences - User preferences containing IOC definitions
+ * @returns Promise that resolves once context menu items have been updated
+ *
+ * @remarks
+ * Errors are silently ignored to account for environments where the
+ * `contextMenus` API is unavailable.
  */
-export const updateContextMenu = async (id: string, title: string) => {
+export const setContextMenuItem = async (
+    preferences: Preferences
+): Promise<void> => {
     try {
-        await Browser.contextMenus.create({
-            id,
-            title,
-            contexts: ['selection'],
-        });
-    } catch (err) {
-        throw new Error(`Error updating context menu: ${err}`);
-    }
-};
+        await removeContextMenuItems();
 
-/**
- * Sets the context menu items for the browser extension based on the provided preferences.
- *
- * First, it removes all existing context menu items. Then, for each active
- * IOCDefinition in the provided preferences, it creates a corresponding
- * context menu item.
- *
- * @param {Preferences} preferences - The user preferences containing IOCDefinitions.
- * @returns {Promise<void>} A promise that resolves once all context menu items have been updated.
- */
-export const setContextMenuItems = async (preferences: Preferences) => {
-    await removeContextMenuItems();
-    for (const [key, IOCDef] of Object.entries(preferences) as [
-        string,
-        IOCDefinition
-    ][]) {
-        IOCDef.active && (await updateContextMenu(key, IOCDef.name));
+        const activeCount = Object.values(preferences).filter(
+            value => value.active
+        ).length;
+
+        if (activeCount > 0) {
+            Browser.contextMenus.create({
+                id: 'IOCIntel',
+                title: 'IOC Intel',
+                contexts: ['selection'],
+            });
+        }
+    } catch {
+        // ignore errors where the contextmenu api is not available
     }
 };
 

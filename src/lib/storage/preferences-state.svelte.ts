@@ -1,7 +1,7 @@
 import {
     getStorageArea,
     removeContextMenuItems,
-    setContextMenuItems,
+    setContextMenuItem,
 } from '@src/lib/browser/browser-utils';
 import { TabState } from '@src/lib/components/tabs/tab-state.svelte';
 import { forEachUrls, isValidUrl } from '@src/lib/IOC/ioc-utils';
@@ -90,7 +90,7 @@ export class PreferencesState {
 
         await removeContextMenuItems();
 
-        await setContextMenuItems(cleaned);
+        await setContextMenuItem(cleaned);
 
         return cleaned;
     };
