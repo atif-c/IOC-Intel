@@ -58,7 +58,7 @@
         }
 
         &.invalid {
-            border: 0.1rem solid var(--clr-negative);
+            outline: 0.1rem solid var(--clr-negative) !important;
         }
 
         &:focus-visible {
