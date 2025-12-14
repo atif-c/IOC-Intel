@@ -1,121 +1,98 @@
-import { copyToClipboard } from '@src/lib/browser/browser-utils';
-import {
-    FULL_URL_PATTERN,
-    getFlagValue,
-    HASH_PATTERN,
-    IPV4_PATTERN,
-    IPV6_PATTERN,
-    normaliseUrl,
-} from '@src/lib/IOC/ioc-utils';
 import type { Flag, Preferences } from '@src/lib/storage/default-preferences';
-import Browser from 'webextension-polyfill';
+
+import {
+    createTab,
+    getTabInsertionIndex,
+} from '@src/lib/browser/browser-utils';
+import {
+    detectIOCType,
+    handleCopyToClipboard,
+    isValidAndActiveIOCType,
+    processUrlTemplate,
+} from '@src/lib/IOC/ioc-utils';
+import { PreferencesState } from '@src/lib/storage/preferences-state.svelte';
 
 /**
- * Executes actions based on an IOC (Indicator of Compromise) type and user-configured flags.
+ * Opens browser tabs for all configured URLs for the given IOC type.
  *
- * Supports different IOC types (`ip`, `hash`, `url`) and performs actions such as:
- * - Copying IOC to the clipboard (optionally sanitised)
- * - Opening a new tab with a URL formatted using the IOC
- *
- * @param {keyof Preferences} IOCType - The type of IOC (e.g., 'ip', 'hash', 'url').
- * @param {string} normalisedIOC - The normalised IOC value to use.
- * @param {Flag[]} flags - Array of flags form the Preferences that control optional behaviors.
- * @param {string} url - The URL template to open (may contain placeholders like `{ip}`).
- * @param {number} tabIndex - The index at which to open the new browser tab.
- *
+ * @param {string[]} urls - Array of URL templates to open
+ * @param {string} ioc - IOC value to insert into templates
+ * @param {number} startIndex - Tab index where the first tab should be inserted
  * @returns {void}
+ * @throws {Error} If tab creation fails
  */
-export const executeIOCIntel = (
-    IOCType: keyof Preferences,
-    normalisedIOC: string,
-    flags: Flag[],
-    url: string,
-    tabIndex: number
-) => {
-    switch (IOCType) {
-        case 'ip':
-            if (
-                !IPV4_PATTERN.test(normalisedIOC) &&
-                !IPV6_PATTERN.test(normalisedIOC)
-            )
-                break;
 
-            if (getFlagValue(flags, ['Copy IP'])) {
-                let toCopy = normalisedIOC;
+/**
+ * Executes IOC (Indicator of Compromise) investigation actions based on the IOC type and user-configured preferences.
+ *
+ * This function processes a single normalised IOC by:
+ * 1. Auto-detecting the IOC type by validating against type-specific patterns (IPv4/IPv6, hash, or URL)
+ * 2. Loading preferences if not already loaded
+ * 3. Validating that the IOC type is active and configured in preferences
+ * 4. Optionally copying the IOC to the clipboard (with optional sanitisation to prevent accidental clicks)
+ *    - IP addresses: Replaces the last dot/colon with `[.]` or `[:]` if sanitisation is enabled
+ *    - URLs: Replaces all dots with `[.]` if sanitisation is enabled
+ * 5. Opening browser tabs in the background with the IOC inserted into URL template placeholders
+ *    - IP: `{ip}` placeholder
+ *    - Hash: `{hash}` placeholder
+ *    - URL: `{url}`, `{encodedUrl}`, and `{domain}` placeholders
+ *
+ * Tabs are opened sequentially in the background (not activated) starting at the index after the current active tab.
+ *
+ * @param {string} normalisedIOC - Normalised (unsanitised, trimmed, lowercased) IOC value to investigate
+ * @returns {Promise<boolean>} `true` if the IOC was successfully processed; `false` if validation failed,
+ *                             the IOC type is inactive, or an error occurred
+ * @throws {Error} If browser tabs API query fails
+ * @throws {Error} If preferences loading fails
+ * @throws {Error} If tab creation fails
+ * @throws {TypeError} If URL parsing fails for URL-type IOCs
+ *
+ * @example
+ * // Process an IP address
+ * const result = await executeIOCIntel('192.168.1.1');
+ * // Opens investigation tabs and optionally copies sanitised IP to clipboard
+ *
+ * @example
+ * // Process a hash
+ * const result = await executeIOCIntel('abc123def456...');
+ * // Opens investigation tabs and optionally copies hash to clipboard
+ *
+ * @example
+ * // Process a URL
+ * const result = await executeIOCIntel('https://malicious-site.com');
+ * // Opens investigation tabs with URL, encoded URL, and domain placeholders replaced
+ */
+export const executeIOCIntel = async (
+    normalisedIOC: string
+): Promise<boolean> => {
+    try {
+        // Detect the IOC type using pattern matching
+        const iocType: keyof Preferences =
+            (detectIOCType(normalisedIOC) as keyof Preferences) || 'unknown';
 
-                if (getFlagValue(flags, ['Copy IP', 'Sanitise IP'])) {
-                    const lastDot = toCopy.lastIndexOf('.');
-                    const lastColon = toCopy.lastIndexOf(':');
+        // Validate IOC type is active and configured
+        if (!(await isValidAndActiveIOCType(iocType))) {
+            return false;
+        }
 
-                    if (lastDot > lastColon) {
-                        toCopy =
-                            toCopy.slice(0, lastDot) +
-                            '[.]' +
-                            toCopy.slice(lastDot + 1);
-                    } else if (lastColon > -1) {
-                        toCopy =
-                            toCopy.slice(0, lastColon) +
-                            '[:]' +
-                            toCopy.slice(lastColon + 1);
-                    }
-                }
+        const prefsState = await PreferencesState.getInstance().getState();
+        const typePrefs = prefsState[iocType];
 
-                copyToClipboard(toCopy);
-            }
+        const flags: Flag[] = typePrefs.flags ?? [];
+        const urls: string[] = typePrefs.urls ?? [];
 
-            Browser.tabs.create({
-                url: normaliseUrl(url.replace('{ip}', normalisedIOC)),
-                index: tabIndex,
-                active: false,
-            });
+        handleCopyToClipboard(normalisedIOC, flags);
+        let tabIndex: number = await getTabInsertionIndex();
 
-            break;
+        urls.forEach((url: string) => {
+            const processedUrl: string = processUrlTemplate(url, normalisedIOC);
+            createTab(processedUrl, tabIndex);
+            tabIndex++;
+        });
 
-        case 'hash':
-            if (!HASH_PATTERN.test(normalisedIOC)) break;
-
-            if (getFlagValue(flags, ['Copy Hash']))
-                copyToClipboard(normalisedIOC);
-
-            Browser.tabs.create({
-                url: normaliseUrl(url.replace('{hash}', normalisedIOC)),
-                index: tabIndex,
-                active: false,
-            });
-
-            break;
-
-        case 'url':
-            const normalisedUrl = normaliseUrl(normalisedIOC);
-            if (!FULL_URL_PATTERN.test(normalisedUrl)) break;
-
-            if (getFlagValue(flags, ['Copy URL'])) {
-                let toCopy = normalisedIOC;
-
-                if (getFlagValue(flags, ['Copy URL', 'Sanitise URL'])) {
-                    toCopy = toCopy.replace(/\./g, '[.]');
-                }
-                copyToClipboard(normalisedUrl);
-            }
-
-            Browser.tabs.create({
-                url: normaliseUrl(
-                    url
-                        .replace('{url}', normalisedUrl)
-                        .replace(
-                            '{encodedUrl}',
-                            encodeURIComponent(normalisedUrl)
-                        )
-                        .replace('{domain}', new URL(normalisedUrl).hostname)
-                ),
-                index: tabIndex,
-                active: false,
-            });
-
-            break;
-
-        default:
-            console.log(`Unknown IOC type: ${IOCType}`);
-            break;
+        return true;
+    } catch (error) {
+        console.error('Error executing IOC intel:', error);
+        return false;
     }
 };
