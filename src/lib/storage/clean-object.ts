@@ -10,10 +10,10 @@
  * @param {T} template - Template defining valid keys and default values
  * @returns {T} Cleaned object matching the template structure
  */
-export function cleanObject<T extends Record<string, any>>(
+export const cleanObject = <T extends Record<string, any>>(
     object: Record<string, any> = {},
     template: T
-): T {
+): T => {
     // Helper to clean nested objects recursively
     const cleanNestedObject = <U extends Record<string, any>>(
         userObj: Record<string, any>,
@@ -79,4 +79,4 @@ export function cleanObject<T extends Record<string, any>>(
     }
 
     return result;
-}
+};
