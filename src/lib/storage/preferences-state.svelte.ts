@@ -59,22 +59,36 @@ export class PreferencesState {
     }
 
     /**
-     * Gets the current preferences state.
+     * Gets the current preferences state, loading it from persistent storage
+     * if necessary.
      *
-     * @returns {Preferences} The current state object managed by `StateManager`.
+     * Browser extension contexts can unload and lose in-memory state. When this
+     * method is called, it checks whether the internal `StateManager` holds any
+     * data. If the state is empty, it performs an asynchronous load from storage
+     * to restore the persisted preferences.
+     *
+     * After loading, `storageLoaded` is set to `true`. If the state is already
+     * populated, no loading occurs.
+     *
+     * @returns {Promise<Preferences>} A promise resolving to the current, fully
+     *          loaded preferences state
      */
-    get state(): Preferences {
+    getState = async (): Promise<Preferences> => {
+        if (Object.keys(this.stateManager.state).length === 0) {
+            await this.stateManager.load();
+            this.storageLoaded = true;
+        }
         return this.stateManager.state;
-    }
+    };
 
     /**
      * Sets the preferences state.
      *
-     * @param {Preferences} newState - The new state to set in the `StateManager`.
+     * @param {Preferences} newState - State to set in the `StateManager`
      */
-    set state(newState: Preferences) {
+    setState = (newState: Preferences): void => {
         this.stateManager.state = newState;
-    }
+    };
 
     #loadState = async (): Promise<Preferences> => {
         const raw = await getStorageArea().get();
