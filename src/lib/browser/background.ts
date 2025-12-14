@@ -3,43 +3,29 @@ import { normaliseString } from '@src/lib/IOC/ioc-utils';
 import { PreferencesState } from '@src/lib/storage/preferences-state.svelte';
 import Browser from 'webextension-polyfill';
 
+/**
+ * Handles context menu clicks.
+ * Executes IOC Intel investigation on the selected text if the menu item is valid.
+ *
+ * @param {Browser.Menus.OnClickData} info - Context menu click information including selected text and menu item ID
+ * @returns {Promise<void>} - Promise that resolves when the IOC Intel execution is complete or validation fails
+ * @throws {Error} - If executeIOCIntel encounters an error during execution
+ */
+const handleContextMenuClick = async (
+    info: Browser.Menus.OnClickData
+): Promise<boolean> => {
+    if (!info.selectionText) return Promise.resolve(false);
+    const normalisedUserSelection: string = normaliseString(info.selectionText);
+    return executeIOCIntel(normalisedUserSelection);
+};
+
 async function init() {
     // Listen for storage changes and reload preferences automatically
     Browser.storage.onChanged.addListener((): void => {
         PreferencesState.getInstance().stateManager.load();
     });
-
-    // Handle context menu clicks
-    Browser.contextMenus.onClicked.addListener(async info => {
-        if (!preferences.state || Object.keys(preferences.state).length === 0) {
-            await preferences.stateManager.load();
-        }
-
-        if (!preferences.state || !(info.menuItemId in preferences.state)) {
-            return;
-        }
-
-        if (!(info.menuItemId in preferences.state)) return;
-
-        const normalisedUserSelection = normaliseString(info.selectionText!);
-
-        const [activeTab] = await Browser.tabs.query({
-            active: true,
-            currentWindow: true,
-        });
-        let tabIndex = activeTab.index + 1;
-
-        preferences.state[info.menuItemId].urls.forEach(url => {
-            executeIOCIntel(
-                info.menuItemId,
-                normalisedUserSelection,
-                preferences.state[info.menuItemId].flags,
-                url,
-                tabIndex
-            );
-            tabIndex++;
-        });
-    });
+    // Listen for context menu clicks to trigger IOC Intel investigations
+    Browser.contextMenus.onClicked.addListener(handleContextMenuClick);
 }
 
 init();
