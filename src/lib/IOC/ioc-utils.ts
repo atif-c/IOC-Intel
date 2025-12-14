@@ -84,16 +84,29 @@ export const forEachUrls = (
 };
 
 /**
- * Validates whether a given string is a domain or a well-formed HTTP/HTTPS URL.
- * @param {string} input
- * @returns {boolean}
+ * Validates whether a given string is a well-formed HTTP/HTTPS URL.
+ * The string is normalised before validation.
+ * Note: This validation allows URLs with or without protocols due to
+ * the FULL_URL_PATTERN implementation.
+ *
+ * @param {string} input - String to validate as a URL
+ * @returns {boolean} True if the input matches the URL pattern, false otherwise
+ *
+ * @example
+ * isValidUrl('https://example.com'); // true
+ * isValidUrl('http://localhost:8080/path'); // true
+ * isValidUrl('example.com'); // true (protocol optional in pattern)
+ * isValidUrl(''); // false (empty string)
+ * isValidUrl('  https://test[.]com  '); // true (normalised and validated)
+ * isValidUrl('not a url'); // false
  */
-export const isValidUrl = (input: string) => {
-    const normalised = normaliseString(input);
-    if (normalised.length == 0) return false;
+export const isValidUrl = (input: string): boolean => {
+    const normalised: string = normaliseString(input);
 
-    if (FULL_URL_PATTERN.test(normalised)) return true;
-    return false;
+    if (normalised.length === 0) return false;
+
+    // Protocol is optional in the pattern
+    return FULL_URL_PATTERN.test(normalised);
 };
 
 /**
