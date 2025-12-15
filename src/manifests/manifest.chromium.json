@@ -2,5 +2,6 @@
     "background": {
         "service_worker": "entries/background.js",
         "type": "module"
-    }
+    },
+    "host_permissions": ["<all_urls>"]
 }
