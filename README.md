@@ -1,6 +1,6 @@
 # IOC Intel
 
-A powerful and flexible browser extension for investigating Indicators of Compromise (IOCs). Use configurable right-click context menu for selected highlighted IOCs and opens threat intelligence links for efficient analysis.
+A powerful browser extension for investigating Indicators of Compromise. Use a popup button or context menu button to analyse highlighted IOCs.
 
 ## Download
 
@@ -49,7 +49,6 @@ After installing, open the extension's **Options** page to:
 -   Enable/disable types of IOCs to monitor
 
 -   Toggle:
-
     -   Clipboard copying
     -   IOC sanitisation
 
@@ -177,7 +176,8 @@ ioc-intel/
 │   │   ├── IOC/                        # IOC validation and processing logic
 │   │   ├── browser/                    # Browser extension interaction layer
 │   │   ├── components/                 # Reusable Svelte UI components
-│   │   └── storage/                    # Data persistence and state management
+│   │   ├── storage/                    # Data persistence and state management
+│   │   └── utils/                      # Other code
 │   │
 │   ├── manifests/                      # Extension manifest definitions
 │   │   ├── manifest.base.json
