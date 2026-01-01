@@ -38,7 +38,9 @@
 
 {#if selectedTabState != undefined}
     <div class="active-switch pb-1rem mt-1rem btm-border">
-        <Switch bind:checked={selectedTabState!.active} />
+        {#key selectedTabState!.name}
+            <Switch bind:checked={selectedTabState!.active} />
+        {/key}
     </div>
 
     <div
